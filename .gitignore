@@ -1,0 +1,12 @@
+#Ignore generated class files
+*.class
+bin/*
+
+#Ignore settings file
+*.settings
+
+#Ignore classpath
+*.classpath
+
+#Ignore Eclipse-generated file
+*.project
