@@ -1,5 +1,8 @@
 import validators.ValidityCheck;
 
+/*
+ * 
+ */
 public class Main {
 
 	/*
@@ -21,7 +24,6 @@ public class Main {
 			validityChecker.validateInput();
 			validityChecker.closeInput();
 		}
-		
 		
 	}
 

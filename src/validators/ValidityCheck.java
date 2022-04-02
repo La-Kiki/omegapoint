@@ -9,30 +9,10 @@ import java.io.*;
 public class ValidityCheck {
 	File inputFile = null;
 	InputStream inputSource = null;
+	
 	Scanner input = null;
 	
-	/*
-	 * Takes any number of newline-separated Swedish numbers and then logs which, if any, are invalid.
-	 * @param args  - The file paths to 
-	 * 
-	 * @return None
-	 */
-	public static void main(String[] args) {
-		if(args == null || args.length == 0) {
-			ValidityCheck validityChecker = new ValidityCheck(System.in);
-			validityChecker.validateInput();
-			validityChecker.closeInput();
-			
-		}
-		
-		for(int i=0; i < args.length; ++i){
-			ValidityCheck validityChecker = new ValidityCheck(args[i]);
-			validityChecker.validateInput();
-			validityChecker.closeInput();
-		}
-		
-		
-	}
+	//TODO: Consider 
 	
 	/*
 	 * Creates a new ValidityCheck that will scan an input stream for any invalid Swedish
@@ -64,21 +44,31 @@ public class ValidityCheck {
 		
 	}
 	
+	
 	public void validateInput() {
 		
+		//Log incorrect numbers here? In main? Separate module? 
+		//TODO: Read separation of concerns
+		
+		/*if(!isValidSwedishPersonalNumber()){
+			//Log in newly created output file
+		}*/
 	}
 	
-	
-	/*
-	 * 
-	 * @param
-	 * 
-	 * @eturn 
-	 */
-	public boolean isValidDate() {
+	public boolean isValidSwedishPersonalNumber() {
+		if(isValidPersonalNumber()) {
+			return true;
+		}
+		else if(isValidCoordinationNumber()) {
+			return true;
+		}
+		else if(isValidOrganisationNumber()) {
+			return true;
+		}
 		
 		return false;
 	}
+	
 	
 	/*
 	 * 
@@ -87,6 +77,18 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public boolean isValidNumberFormat() {
+		
+		return false;
+	}
+	
+	
+	/*
+	 * 
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	public boolean isValidBirthDate() {
 		
 		return false;
 	}
@@ -111,6 +113,28 @@ public class ValidityCheck {
 	public boolean isValidCoordinationNumber() {
 			
 			return false;
+	}
+	
+	/*
+	 * Checks whether a given string conforms to the number format limitations of a Swedish organisation number
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	public boolean isValidOrganisationNumberFormat() {
+		
+		return false;
+	}
+	
+	/*
+	 * 
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	public boolean isValidOrganisationDate() {
+		
+		return false;
 	}
 
 	/*

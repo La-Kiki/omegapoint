@@ -11,4 +11,4 @@ bin/*
 #Ignore Eclipse-generated file
 *.project
 
-.pdf
+*.pdf
