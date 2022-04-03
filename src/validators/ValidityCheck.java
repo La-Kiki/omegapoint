@@ -53,6 +53,8 @@ public class ValidityCheck {
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
+			//TODO: Reconsider handling. If no file is found, Scanner will inevitably crash later
+			// Call other constructor
 		}
 		
 	}
@@ -64,27 +66,15 @@ public class ValidityCheck {
 			String idNumber = input.nextLine().strip();
 			
 			if(!idNumber.isBlank()) {
-				if(!isValidIdNumber(idNumber)) {
-					//Log ID number into file
-				}
+				continue;
+			}
+			else if(!isValidIdNumber(idNumber)) {
+				//Log in newly created output file
 			}
 		}
 		
-		/*
-		 * 
-		 * idNumber = idNumber.strip();
-		 *
-		 *	}
-		 *	if(idNumber.isBlank()){
-		 *	}
-		 */
-		
 		//Log incorrect numbers here? In main? Separate module? 
-		//TODO: Read separation of concerns
-		
-		/*if(!isValidSwedishPersonalNumber()){
-			//Log in newly created output file
-		}*/
+		//TODO: Read separation of concerns/
 	}
 	
 	
@@ -110,13 +100,13 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public static boolean isValidFormat(String idNumber) {
-		String longDateNoDivider = "[0-9]{12}";
+		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX
 		String shortDateNoDivider = "[0-9]{10}";
-		// idNumber consists only of numbers. With or without century of birthdate
+		String longDateNoDivider = "[1-9]{2}" + shortDateNoDivider;
 		
-		String longDateWithDivider = "[0-9]{8}(-|\\+)[0-9]{4}";
+		// idNumber may have a + or - as divider between birth date and control numbers. YYMMDD-XXXX or YYYYMMDD-XXXX
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		// idNumber may have a + or - as divider between birth date and control numbers. With or without century of birthdate
+		String longDateWithDivider = "[1-9]{2}" + shortDateWithDivider;
 		
 		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {
 			return true;
@@ -138,6 +128,11 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public static boolean isValidPersonalNumber(String personalNumber) {
+		if(isValidFormat(personalNumber)) {
+			if(isValidPersonalNumberDate(personalNumber)) {
+				return true;
+			}
+		}
 		
 		return false;
 	}
@@ -162,8 +157,13 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public static boolean isValidCoordinationNumber(String coordinationNumber) {
-			
-			return false;
+		if(isValidFormat(coordinationNumber)) {
+			if(isValidCoordinationNumberDate(coordinationNumber)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/*
@@ -198,6 +198,7 @@ public class ValidityCheck {
 		return false;
 	}
 	
+	
 	/*
 	 * Checks whether a given string conforms to the number format limitations of a Swedish organisation number.
 	 * @param
@@ -220,6 +221,7 @@ public class ValidityCheck {
 		
 		return false;
 	}
+	
 	
 	/*
 	 * 
