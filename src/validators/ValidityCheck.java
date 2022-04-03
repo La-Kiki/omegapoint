@@ -1,6 +1,7 @@
 package validators;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.io.*;
 
 /*
@@ -12,7 +13,19 @@ public class ValidityCheck {
 	
 	Scanner input = null;
 	
-	//TODO: Consider 
+	static final int CURRENT_YEAR = 2022;
+	
+	static final int NO_CENTURY_NO_SEPARATOR = 10;
+	static final int CENTURY_NO_SEPARATOR = 12;
+			
+	static final int NO_CENTURY_WITH_SEPARATOR = 11;
+	static final int CENTURY_WITH_SEPARATOR = 13;
+	
+	static final int SHORT_BIRTH_DATE = 6;
+	static final int LONG_BIRTH_DATE = 8;
+	
+	//TODO: Consider using enums instead. Separate module?
+	
 	
 	/*
 	 * Creates a new ValidityCheck that will scan an input stream for any invalid Swedish
@@ -47,6 +60,12 @@ public class ValidityCheck {
 	
 	public void validateInput() {
 		
+		
+		/*if(input.hasNextLine() && !input.hasNext("\s")){
+		}
+		if(idNumber.isBlank()){
+		}
+		
 		//Log incorrect numbers here? In main? Separate module? 
 		//TODO: Read separation of concerns
 		
@@ -55,14 +74,15 @@ public class ValidityCheck {
 		}*/
 	}
 	
-	public boolean isValidSwedishPersonalNumber() {
-		if(isValidPersonalNumber()) {
+	
+	public static boolean isValidIDNumber(String idNumber) {
+		if(isValidPersonalNumber(idNumber)) {
 			return true;
 		}
-		else if(isValidCoordinationNumber()) {
+		else if(isValidCoordinationNumber(idNumber)) {
 			return true;
 		}
-		else if(isValidOrganisationNumber()) {
+		else if(isValidOrganisationNumber(idNumber)) {
 			return true;
 		}
 		
@@ -76,10 +96,36 @@ public class ValidityCheck {
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidNumberFormat() {
+	public static boolean isValidFormat(String idNumber) {
+		boolean containsDash = idNumber.contains("-");
+		boolean containsPlus = idNumber.contains("+");
+		
+		if(idNumber.length() == NO_CENTURY_NO_SEPARATOR || idNumber.length() == CENTURY_NO_SEPARATOR) {
+			if(!containsDash && !containsPlus){
+				if(Pattern.matches("[0-9]+", idNumber)) {
+					return true;
+				}
+			}
+		}
+		else if(idNumber.length() == NO_CENTURY_WITH_SEPARATOR || idNumber.length() == CENTURY_WITH_SEPARATOR) {	
+			if(containsDash || containsPlus){
+				String birthDate = idNumber.split("-|\\+")[0];
+				String controlNumber = idNumber.split("-|\\+")[1];
+				
+				if((birthDate.length() == SHORT_BIRTH_DATE || birthDate.length() == LONG_BIRTH_DATE)
+					&& controlNumber.length() == 4
+					&& Pattern.matches("[0-9]+", birthDate) && Pattern.matches("[0-9]+", controlNumber)) {
+					return true;
+				}
+			}
+		}
 		
 		return false;
+		//TODO: Look into Enums to handle valid date lengths instead
+		// Search for String.
 	}
+	
+	
 	
 	
 	/*
@@ -88,7 +134,7 @@ public class ValidityCheck {
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidBirthDate() {
+	public static boolean isValidPersonalNumber(String personalNumber) {
 		
 		return false;
 	}
@@ -99,10 +145,12 @@ public class ValidityCheck {
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidPersonalNumber() {
+	public static boolean isValidPersonalNumberDate(String personalNumber) {
 		
 		return false;
 	}
+	
+	
 	
 	/*
 	 * 
@@ -110,32 +158,24 @@ public class ValidityCheck {
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidCoordinationNumber() {
+	public static boolean isValidCoordinationNumber(String coordinationNumber) {
 			
 			return false;
 	}
 	
 	/*
-	 * Checks whether a given string conforms to the number format limitations of a Swedish organisation number
+	 * 
 	 * @param
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidOrganisationNumberFormat() {
+	public static boolean isValidCoordinationNumberDate(String coordinationNumber) {
 		
 		return false;
 	}
 	
-	/*
-	 * 
-	 * @param
-	 * 
-	 * @eturn 
-	 */
-	public boolean isValidOrganisationDate() {
-		
-		return false;
-	}
+	
+	
 
 	/*
 	 * 
@@ -143,10 +183,52 @@ public class ValidityCheck {
 	 * 
 	 * @eturn 
 	 */
-	public boolean isValidOrganisationNumber() {
+	public static boolean isValidOrganisationNumber(String orgNumber) {
+		if(isValidFormat(orgNumber)) {
+			if(isValidOrganisationNumberFormat(orgNumber)) {
+				if(isValidOrganisationDate(orgNumber)) {
+					return true;
+				}
+			}
+		}
 		
 		return false;
 	}
+	
+	/*
+	 * Checks whether a given string conforms to the number format limitations of a Swedish organisation number.
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	private static boolean isValidOrganisationNumberFormat(String orgNumber) {
+		
+		return false;
+	}
+	
+	/*
+	 * 
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	public static boolean isValidOrganisationDate(String orgNumber) {
+
+		
+		return false;
+	}
+	
+	/*
+	 * 
+	 * @param
+	 * 
+	 * @eturn 
+	 */
+	public static boolean fulfillsLuhnsAlgorithm(String idNumber) {
+		
+		return false;
+	}
+	
 
 	/*
 	 * Closes the input source that is being read for juridical personal numbers
