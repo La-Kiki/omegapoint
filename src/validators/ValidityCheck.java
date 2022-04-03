@@ -97,32 +97,26 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public static boolean isValidFormat(String idNumber) {
-		boolean containsDash = idNumber.contains("-");
-		boolean containsPlus = idNumber.contains("+");
+		String shortDateNoDivider = "[0-9]{10}";
+		String longDateNoDivider = "[0-9]{12}";
 		
-		if(idNumber.length() == NO_CENTURY_NO_SEPARATOR || idNumber.length() == CENTURY_NO_SEPARATOR) {
-			if(!containsDash && !containsPlus){
-				if(Pattern.matches("[0-9]+", idNumber)) {
-					return true;
-				}
-			}
+		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
+		String longDateWithDivier = "[0-9]{8}(-|\\+)[0-9]{4}";
+		
+		if(Pattern.matches(shortDateNoDivider, idNumber)) {
+			return true;
 		}
-		else if(idNumber.length() == NO_CENTURY_WITH_SEPARATOR || idNumber.length() == CENTURY_WITH_SEPARATOR) {	
-			if(containsDash || containsPlus){
-				String birthDate = idNumber.split("-|\\+")[0];
-				String controlNumber = idNumber.split("-|\\+")[1];
-				
-				if((birthDate.length() == SHORT_BIRTH_DATE || birthDate.length() == LONG_BIRTH_DATE)
-					&& controlNumber.length() == 4
-					&& Pattern.matches("[0-9]+", birthDate) && Pattern.matches("[0-9]+", controlNumber)) {
-					return true;
-				}
-			}
+		else if(Pattern.matches(longDateNoDivider, idNumber)) {
+			return true;
+		}
+		else if(Pattern.matches(shortDateWithDivider, idNumber)) {
+			return true;
+		}
+		else if(Pattern.matches(longDateWithDivier, idNumber)) {
+			return true;
 		}
 		
 		return false;
-		//TODO: Look into Enums to handle valid date lengths instead
-		// Search for String.
 	}
 	
 	
