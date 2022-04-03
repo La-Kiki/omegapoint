@@ -60,11 +60,24 @@ public class ValidityCheck {
 	
 	public void validateInput() {
 		
+		while(input.hasNextLine()){
+			String idNumber = input.nextLine().strip();
+			
+			if(!idNumber.isBlank()) {
+				if(!isValidIdNumber(idNumber)) {
+					//Log ID number into file
+				}
+			}
+		}
 		
-		/*if(input.hasNextLine() && !input.hasNext("\s")){
-		}
-		if(idNumber.isBlank()){
-		}
+		/*
+		 * 
+		 * idNumber = idNumber.strip();
+		 *
+		 *	}
+		 *	if(idNumber.isBlank()){
+		 *	}
+		 */
 		
 		//Log incorrect numbers here? In main? Separate module? 
 		//TODO: Read separation of concerns
@@ -75,7 +88,7 @@ public class ValidityCheck {
 	}
 	
 	
-	public static boolean isValidIDNumber(String idNumber) {
+	public static boolean isValidIdNumber(String idNumber) {
 		if(isValidPersonalNumber(idNumber)) {
 			return true;
 		}
@@ -97,22 +110,18 @@ public class ValidityCheck {
 	 * @eturn 
 	 */
 	public static boolean isValidFormat(String idNumber) {
-		String shortDateNoDivider = "[0-9]{10}";
 		String longDateNoDivider = "[0-9]{12}";
+		String shortDateNoDivider = "[0-9]{10}";
+		// idNumber consists only of numbers. With or without century of birthdate
 		
+		String longDateWithDivider = "[0-9]{8}(-|\\+)[0-9]{4}";
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		String longDateWithDivier = "[0-9]{8}(-|\\+)[0-9]{4}";
+		// idNumber may have a + or - as divider between birth date and control numbers. With or without century of birthdate
 		
-		if(Pattern.matches(shortDateNoDivider, idNumber)) {
+		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {
 			return true;
 		}
-		else if(Pattern.matches(longDateNoDivider, idNumber)) {
-			return true;
-		}
-		else if(Pattern.matches(shortDateWithDivider, idNumber)) {
-			return true;
-		}
-		else if(Pattern.matches(longDateWithDivier, idNumber)) {
+		else if(Pattern.matches(longDateWithDivider + "|" + shortDateWithDivider, idNumber)) {
 			return true;
 		}
 		
