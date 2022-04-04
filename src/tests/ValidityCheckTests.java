@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.io.*;
 
-import validators.ValidityCheck;
+import validators.*;
 
 public class ValidityCheckTests {
 	String invalidFilePath = "/not/a/real/file.txt";
@@ -25,37 +25,9 @@ public class ValidityCheckTests {
     }
 	
 	@Test
-    public void validityCheckConstructorWithValidFile() {
+    public void validityCheckConstructorWithValidFile() throws FileNotFoundException{
 		ValidityCheck checker = new ValidityCheck(validFilePath);
 		
 		assertEquals(checker.getClass(), ValidityCheck.class);
-    }
-	
-	
-	
-	@Test
-    public void testFormatValidityWithValidPersonalNumber() {
-		
-		assertTrue(ValidityCheck.isValidFormat("19600220-1234"));
-    }
-	
-	@Test
-    public void testFormatValidityWithValidCoordinationNumber() {
-		
-		assertTrue(ValidityCheck.isValidFormat("19600250-1234"));
-	}
-	
-	@Test
-    public void testFormatValidityWithValidOrganisationNumber() {
-		
-		assertTrue(ValidityCheck.isValidFormat("12600250-1234"));
-	}
-	
-	
-	
-	@Test
-    public void testFormatValidityWithInvalidInput() {
-        
-		assertFalse(ValidityCheck.isValidFormat("hm"));
     }
 }
