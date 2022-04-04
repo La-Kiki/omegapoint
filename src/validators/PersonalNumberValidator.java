@@ -105,7 +105,7 @@ public class PersonalNumberValidator {
 			return false;
 		}
 		
-		String birthDate = getBirthDate(personalNumber);
+		String birthDate = getBirthDate(personalNumber, true);
 		int year = Integer.parseInt(birthDate.substring(0, 4));
 		// If date parsing fails it is not a valid date
 		if(year <= CURRENT_YEAR) {
@@ -129,13 +129,16 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return A birth date in the format YYYYMMDD
 	 */
-	private static String getBirthDate(String personalNumber) {
+	private static String getBirthDate(String personalNumber, boolean addCentury) {
 		String[] segments = separateDateAndControlNumbers(personalNumber);
 		String birthDate = segments[0];
 		String delimiter = segments[1];
 		
-		if(birthDate.length() == SHORT_BIRTH_DATE) {
+		if(birthDate.length() == SHORT_BIRTH_DATE && addCentury) {
 			birthDate = addCenturyToDate(birthDate, delimiter);
+		}
+		else if(birthDate.length() == LONG_BIRTH_DATE && !addCentury) {
+			birthDate = birthDate.substring(2);
 		}
 		
 		return birthDate;
@@ -176,8 +179,8 @@ public class PersonalNumberValidator {
 		}
 		else if(strLength == LONG_DATE_WITH_DIVIDER || strLength == SHORT_DATE_WITH_DIVIDER) {
 			birthDate = personalNum.substring(0, strLength -5);
-			delimiter = personalNum.substring(strLength -4, strLength -3);
-			controlNums = personalNum.substring(strLength -5, strLength);
+			delimiter = personalNum.substring(strLength -5, strLength -4);
+			controlNums = personalNum.substring(strLength -4, strLength);
 		}
 		
 		return new String[]{birthDate, delimiter, controlNums};
@@ -228,8 +231,29 @@ public class PersonalNumberValidator {
 			return false;
 		}
 		
-		String date = getBirthDate(idNumber);
+		String date = getBirthDate(idNumber, false);
 		String controlNumbers = getControlNumbers(idNumber);
+		
+		String multipliedNumbers = date + controlNumbers;
+		int multipliedSum = 0;
+		
+		for(int i = 0; i < multipliedNumbers.length(); ++i) {
+			int value = Integer.parseInt(String.valueOf(multipliedNumbers.charAt(i)));
+			int multipliedValue= 0;
+			
+			if(i % 2 == 0) {
+				multipliedValue = value*2;				
+			}
+			else {
+				multipliedValue = value*1;
+			}
+			
+			multipliedSum += (multipliedValue/10) + (multipliedValue % 10);
+		}
+		
+		if(multipliedSum % 10 == 0) {
+			return true;
+		}
 		
 		return false;
 	}

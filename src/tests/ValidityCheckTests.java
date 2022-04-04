@@ -11,7 +11,7 @@ import validators.ValidityCheck;
 
 public class ValidityCheckTests {
 	String invalidFilePath = "/not/a/real/file.txt";
-	String validFilePath = new File("src/tests/validPersonalNumbers.txt").getAbsolutePath();
+	String validFilePath = new File("src/tests/testData/validPersonalNumbers.txt").getAbsolutePath();
 	
 	@BeforeAll
 	public static void setup() {

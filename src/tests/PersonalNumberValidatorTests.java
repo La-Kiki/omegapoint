@@ -73,8 +73,15 @@ public class PersonalNumberValidatorTests {
     }
 	
 	@Test
-    public void testDateWithValidDate() {
+    public void testDateWithValidDateDelimiter() {
 		boolean validDate = PersonalNumberValidator.isValidDate("220531-1234");
+		
+		assertTrue(validDate);
+    }
+	
+	@Test
+    public void testDateWithValidDateWithoutDelimiter() {
+		boolean validDate = PersonalNumberValidator.isValidDate("2205311234");
 		
 		assertTrue(validDate);
     }
@@ -91,6 +98,20 @@ public class PersonalNumberValidatorTests {
 		boolean invalidString = PersonalNumberValidator.isValidDate("19YY0130-X234");
         
 		assertFalse(invalidString);
+    }
+	
+	@Test
+    public void testLuhnsAlgorithmWithValidPersonalNumber() {
+		boolean validPersonalNumber = PersonalNumberValidator.fulfillsLuhnsAlgorithm("201701102384");
+        
+		assertTrue(validPersonalNumber);
+    }
+	
+	@Test
+    public void testLuhnsAlgorithmWithInvalidPersonalNumber() {
+		boolean invalidPersonalNumber = PersonalNumberValidator.fulfillsLuhnsAlgorithm("201701272394");
+        
+		assertFalse(invalidPersonalNumber);
     }
 
 }
