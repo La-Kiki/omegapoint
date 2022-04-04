@@ -1,10 +1,8 @@
 package validators;
 
-import java.util.Calendar;
 
 public class OrganisationNumberValidator extends PersonalNumberValidator{
 
-	Calendar calendar = Calendar.getInstance();
 	
 	/*
 	 * 
@@ -13,7 +11,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * @return 
 	 */
 	public static boolean isValidOrganisationNumber(String orgNumber) {
-		if(isValidFormat(orgNumber) && isValidOrgNumberFormat(orgNumber) 
+		if(isValidFormat(orgNumber) && isValidOrgNumberDate(orgNumber) 
 				&& isValidOrganisationValue(orgNumber) && fulfillsLuhnsAlgorithm(orgNumber)) {
 			return true;
 		}
@@ -28,7 +26,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * 
 	 * @return 
 	 */
-	private static boolean isValidOrgNumberFormat(String orgNumber) {
+	private static boolean isValidOrgNumberDate(String orgNumber) {
 		
 		
 		return false;

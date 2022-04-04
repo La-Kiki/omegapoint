@@ -1,6 +1,5 @@
 package validators;
 
-import java.util.*;
 import java.util.regex.Pattern;
 import java.time.format.*;
 import java.time.*;
@@ -30,7 +29,7 @@ public class PersonalNumberValidator {
 	/*
 	 *  Assumes that the given personal number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param personalNumber  - 
 	 * 
 	 * @return 
 	 */
@@ -45,7 +44,7 @@ public class PersonalNumberValidator {
 	
 	/*
 	 * 
-	 * @param
+	 * @param idNumber  - 
 	 * 
 	 * @return 
 	 */
@@ -77,7 +76,7 @@ public class PersonalNumberValidator {
 	
 	/*
 	 * 
-	 * @param
+	 * @param idNumber  - 
 	 * 
 	 * @return 
 	 */
@@ -96,7 +95,7 @@ public class PersonalNumberValidator {
 	/*
 	 *  Assumes that the given ID number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param personalNumber  - 
 	 * 
 	 * @return 
 	 */
@@ -105,6 +104,7 @@ public class PersonalNumberValidator {
 			return false;
 		}
 		
+		//TODO: Make LocalDate check that date hasn't passed yet
 		String birthDate = getBirthDate(personalNumber, true);
 		int year = Integer.parseInt(birthDate.substring(0, 4));
 		// If date parsing fails it is not a valid date
@@ -125,11 +125,12 @@ public class PersonalNumberValidator {
 	/*
 	 *  Assumes that the given ID number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param personalNumber  - 
+	 * @param addCentury  - 
 	 * 
 	 * @return A birth date in the format YYYYMMDD
 	 */
-	private static String getBirthDate(String personalNumber, boolean addCentury) {
+	public static String getBirthDate(String personalNumber, boolean addCentury) {
 		String[] segments = separateDateAndControlNumbers(personalNumber);
 		String birthDate = segments[0];
 		String delimiter = segments[1];
@@ -147,7 +148,7 @@ public class PersonalNumberValidator {
 	/*
 	 *  Assumes that the given ID number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param personalNumber  - 
 	 * 
 	 * @return A control number in the format XXXX
 	 */
@@ -160,12 +161,12 @@ public class PersonalNumberValidator {
 	/*
 	 *  Assumes that the given ID number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param personalNumber  - 
 	 * 
-	 * @return 
+	 * @return An array containing the birthdate with or without the century, eventual delimiter, and control number.
 	 */
-	private static String[] separateDateAndControlNumbers(String personalNum) {
-		int strLength = personalNum.length();
+	private static String[] separateDateAndControlNumbers(String personalNumber) {
+		int strLength = personalNumber.length();
 		String birthDate = "";
 		String delimiter = "";
 		String controlNums = "";
@@ -174,13 +175,13 @@ public class PersonalNumberValidator {
 		 * Leave 6 or 8 birth numbers respectively.
 		 */
 		if(strLength == LONG_DATE_NO_DIVIDER || strLength == SHORT_DATE_NO_DIVIDER) {
-			birthDate = personalNum.substring(0, strLength -4);
-			controlNums = personalNum.substring(strLength -4, strLength);
+			birthDate = personalNumber.substring(0, strLength -4);
+			controlNums = personalNumber.substring(strLength -4, strLength);
 		}
 		else if(strLength == LONG_DATE_WITH_DIVIDER || strLength == SHORT_DATE_WITH_DIVIDER) {
-			birthDate = personalNum.substring(0, strLength -5);
-			delimiter = personalNum.substring(strLength -5, strLength -4);
-			controlNums = personalNum.substring(strLength -4, strLength);
+			birthDate = personalNumber.substring(0, strLength -5);
+			delimiter = personalNumber.substring(strLength -5, strLength -4);
+			controlNums = personalNumber.substring(strLength -4, strLength);
 		}
 		
 		return new String[]{birthDate, delimiter, controlNums};
@@ -188,7 +189,8 @@ public class PersonalNumberValidator {
 	
 	/*
 	 *  . Assumes that the given ID number conforms to the following format: YYMMDD
-	 * @param
+	 * @param personalNumber  - 
+	 * @param delimiter  - 
 	 * 
 	 * @return A birthdate in the format of YYYYMMDD
 	 */
@@ -222,7 +224,7 @@ public class PersonalNumberValidator {
 	/*
 	 * Assumes that the given ID number conforms to one of the following formats: 
 	 * YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param
+	 * @param idNumber  - 
 	 * 
 	 * @return 
 	 */
@@ -247,7 +249,6 @@ public class PersonalNumberValidator {
 			else {
 				multipliedValue = value*1;
 			}
-			
 			multipliedSum += (multipliedValue/10) + (multipliedValue % 10);
 		}
 		

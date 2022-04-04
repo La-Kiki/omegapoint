@@ -81,9 +81,10 @@ public class PersonalNumberValidatorTests {
 	
 	@Test
     public void testDateWithValidDateWithoutDelimiter() {
-		boolean validDate = PersonalNumberValidator.isValidDate("2205311234");
+		boolean validShortDate = PersonalNumberValidator.isValidDate("2201311234");
+		boolean validLongDate = PersonalNumberValidator.isValidDate("192201311234");
 		
-		assertTrue(validDate);
+		assertTrue(validShortDate);
     }
 	
 	@Test
