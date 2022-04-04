@@ -101,11 +101,11 @@ public class PersonalNumberValidator {
 	 * @return 
 	 */
 	public static boolean isValidDate(String personalNumber) {
-		String birthDate = getBirthDate(personalNumber);
-		if(!isANumber(birthDate)) {
+		if(!isValidFormat(personalNumber)) {
 			return false;
 		}
 		
+		String birthDate = getBirthDate(personalNumber);
 		int year = Integer.parseInt(birthDate.substring(0, 4));
 		// If date parsing fails it is not a valid date
 		if(year <= CURRENT_YEAR) {
@@ -121,26 +121,13 @@ public class PersonalNumberValidator {
 		return false;
 	}
 	
-	/*
-	 * @param
-	 * 
-	 * @return 
-	 */
-	private static boolean isANumber(String number) {
-		String numerical = "[0-9]+";
-		if(Pattern.matches(numerical, number)) {
-			return true;
-		}
-		
-		return false;
-	}
 	
 	/*
 	 *  Assumes that the given ID number conforms to one of the following formats: 
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
 	 * @param
 	 * 
-	 * @return A birth date in the format YYYY
+	 * @return A birth date in the format YYYYMMDD
 	 */
 	private static String getBirthDate(String personalNumber) {
 		String[] segments = separateDateAndControlNumbers(personalNumber);
@@ -159,7 +146,7 @@ public class PersonalNumberValidator {
 	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
 	 * @param
 	 * 
-	 * @return A birth date in the format YYYY
+	 * @return A control number in the format XXXX
 	 */
 	public static String getControlNumbers(String personalNumber) {
 		
@@ -237,6 +224,10 @@ public class PersonalNumberValidator {
 	 * @return 
 	 */
 	public static boolean fulfillsLuhnsAlgorithm(String idNumber) {
+		if(!isValidFormat(idNumber)) {
+			return false;
+		}
+		
 		String date = getBirthDate(idNumber);
 		String controlNumbers = getControlNumbers(idNumber);
 		
