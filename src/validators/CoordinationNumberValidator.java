@@ -13,12 +13,8 @@ public class CoordinationNumberValidator extends PersonalNumberValidator{
 	 * @return 
 	 */
 	public static boolean isValidCoordinationNumber(String coordinationNumber) {
-		if(isValidFormat(coordinationNumber)) {
-			if(isValidCoordinationNumberDate(coordinationNumber)) {
-				if(fulfillsLuhnsAlgorithm(coordinationNumber)) {
-					return true;
-				}
-			}
+		if(isValidFormat(coordinationNumber) && isValidCoordinationNumberDate(coordinationNumber) && fulfillsLuhnsAlgorithm(coordinationNumber)) {
+			return true;
 		}
 		
 		return false;

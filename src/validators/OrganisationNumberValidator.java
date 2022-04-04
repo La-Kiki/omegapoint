@@ -13,12 +13,9 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * @return 
 	 */
 	public static boolean isValidOrganisationNumber(String orgNumber) {
-		if(isValidFormat(orgNumber) && isValidOrganisationNumberFormat(orgNumber)) {
-			if(isValidOrganisationDate(orgNumber)) {
-				if(fulfillsLuhnsAlgorithm(orgNumber)) {
-					return true;
-				}
-			}
+		if(isValidFormat(orgNumber) && isValidOrgNumberFormat(orgNumber) 
+				&& isValidOrganisationValue(orgNumber) && fulfillsLuhnsAlgorithm(orgNumber)) {
+			return true;
 		}
 		
 		return false;
@@ -31,7 +28,8 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * 
 	 * @return 
 	 */
-	private static boolean isValidOrganisationNumberFormat(String orgNumber) {
+	private static boolean isValidOrgNumberFormat(String orgNumber) {
+		
 		
 		return false;
 	}
@@ -42,7 +40,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * 
 	 * @return 
 	 */
-	public static boolean isValidOrganisationDate(String orgNumber) {
+	public static boolean isValidOrganisationValue(String orgNumber) {
 
 		
 		return false;

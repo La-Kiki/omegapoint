@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import java.io.*;
 
-import validators.*;
+import validators.ValidityCheck;
 
 public class ValidityCheckTests {
 	String invalidFilePath = "/not/a/real/file.txt";

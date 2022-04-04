@@ -12,6 +12,7 @@ public class ValidityCheck {
 	
 	private Scanner input = null;
 	
+	
 	/*Creates a new PersonalNumberValidator that will scan STDIN for any invalid Swedish
 	 * juridical personal numbers and log them
 	 * 
