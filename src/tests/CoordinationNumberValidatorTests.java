@@ -16,14 +16,14 @@ public class CoordinationNumberValidatorTests {
 	
 	@Test
     public void testDateWithValidBirthDay() {
-		boolean isValidDate = CoordinationNumberValidator.isValidCoordinationNumberDate("196002701234");
+		boolean isValidDate = CoordinationNumberValidator.isValidBirthDate("196002701234");
 		
 		assertTrue(isValidDate);
 	}
 	
 	@Test
     public void testValidCoordinationNumber() {
-		boolean isValidCoordNum = CoordinationNumberValidator.isValidCoordinationNumber("190910799824");
+		boolean isValidCoordNum = CoordinationNumberValidator.isValidBirthDate("190910799824");
 		
 		assertTrue(isValidCoordNum);
 	}

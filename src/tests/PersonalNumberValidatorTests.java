@@ -34,6 +34,7 @@ public class PersonalNumberValidatorTests {
 		assertFalse(invalidPlusWithYear);
     }
 	
+	
 	@Test
     public void testFormatWithValidLengths() {
 		boolean validDecade = PersonalNumberValidator.isValidFormat("6002201234");
@@ -66,11 +67,19 @@ public class PersonalNumberValidatorTests {
 	
 	
 	@Test
-    public void testDateWithValidYear() {
+    public void testDateWithValidLeapYear() {
 		boolean validLeapYear = PersonalNumberValidator.isValidBirthDate("160229-1234");
 		
 		assertTrue(validLeapYear);
     }
+	
+	@Test
+    public void testDateWithInvalidLeapYear() {
+		boolean invalidLeapYear = PersonalNumberValidator.isValidBirthDate("170229-1234");
+		
+		assertFalse(invalidLeapYear);
+    }
+	
 	
 	@Test
     public void testDateWithValidDateDelimiter() {
@@ -85,6 +94,7 @@ public class PersonalNumberValidatorTests {
 		boolean validLongDate = PersonalNumberValidator.isValidBirthDate("192201311234");
 		
 		assertTrue(validShortDate);
+		assertTrue(validLongDate);
     }
 	
 	@Test

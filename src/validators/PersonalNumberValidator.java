@@ -15,20 +15,23 @@ public class PersonalNumberValidator {
 	private static final int CURRENT_YEAR = 2022;
 	private static final int CURRENT_DECADE = 22;
 	
-	private static final int SHORT_BIRTH_DATE = 6;
-	private static final int LONG_BIRTH_DATE = 8;
+	//Constants for the different lengths of valid personal, coordinate, and organisation numbers.
+	// Birth dates without or with century: YYMMDD or YYYYMMDD
+	protected static final int SHORT_BIRTH_DATE = 6;
+	protected static final int LONG_BIRTH_DATE = 8;
 	
-	private static final int SHORT_DATE_NO_DIVIDER = 10;
-	private static final int LONG_DATE_NO_DIVIDER = 12;
+	//Without delimiters + or -
+	protected static final int SHORT_DATE_NO_DIVIDER = 10;
+	protected static final int LONG_DATE_NO_DIVIDER = 12;
 			
-	private static final int SHORT_DATE_WITH_DIVIDER = 11;
-	private static final int LONG_DATE_WITH_DIVIDER = 13;
+	//With delimiters + or -
+	protected static final int SHORT_DATE_WITH_DIVIDER = 11;
+	protected static final int LONG_DATE_WITH_DIVIDER = 13;
 	
-	//TODO: Consider using enums instead. Separate module?
 	
-	
-	/* Checks if a given personal number conforms to a correct format, date, and to the Luhn algorithm.
+	/* Checks if a given personal number conforms to a correct format, date, and to Luhn's algorithm.
 	 * Accepts personal numbers in the format (YY)?YYMMDD[-+]?XXXX.
+	 * 
 	 * @param personalNumber  - The personal number to be validated
 	 * 
 	 * @return A boolean stating whether the given personal number is valid or not
@@ -43,6 +46,7 @@ public class PersonalNumberValidator {
 	
 	
 	/* Checks if a given personal, coordination or organisation number conforms to the format (YY)?YYMMDD[-+]?XXXX.
+	 * 
 	 * @param idNumber  - The ID number to be checked
 	 * 
 	 * @return A boolean stating whether the given ID number follows a valid format
@@ -74,7 +78,8 @@ public class PersonalNumberValidator {
 	}
 	
 	/* Checks whether a year in an personal or coordination number was 100 years ago to warrant a + as delimiter.
-	 * Assumes ID number is in the format YYYYMMDD[-+]?XXXX.
+	 * Assumes the ID number is in the format YYYYMMDD[-+]XXXX.
+	 *  
 	 * @param idNumber  - The ID number to be checked
 	 * 
 	 * @return A boolean stating whether the ID number can use a plus delimiter
@@ -94,10 +99,11 @@ public class PersonalNumberValidator {
 	
 	/* Checks whether a birth date in a personal number is a past or current date. Includes leap years.
 	 * Must subtract 60 from the birth date of a coordinate number to be valid.
-	 * Assumes the personal number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * Personal number must be in the format (YY)?YYMMDD[-+]?XXXX. 
 	 * 
 	 * Unless year is specified with YYYY, it is assumed the year implies the latest possible century. If 
 	 * using a + delimiter, the year is assumed to have occurred at least a century ago.
+	 * 
 	 * @param personalNumber  - The personal number to be checked.
 	 * 
 	 * @return A boolean stating whether the birth date in the given personal number is a past or current date.
@@ -131,6 +137,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * Unless year is specified with YYYY, it is assumed the year implies the latest possible century. If 
 	 * using a + delimiter, the year is assumed to have occurred at least a century ago.
+	 * 
 	 * @param idNumber  - The ID number to retrieve the birth date from
 	 * @param addCentury  - A boolean stating whether the birth date should include the century or not
 	 * 
@@ -152,6 +159,7 @@ public class PersonalNumberValidator {
 	
 	/* Retrieves the delimiter from an personal, coordination or organisation number if present. Otherwise returns an empty string.
 	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * 
 	 * @param idNumber  - The ID number to retrieve the delimiter from
 	 * 
 	 * @return The delimiter if present. Otherwise an empty string
@@ -172,12 +180,14 @@ public class PersonalNumberValidator {
 	
 	
 	
-	/* Takes a personal number and adds a century to the birth date if not present.
-	 * Assumes that the given ID number is in the format (YY)?YYMMDD.
+	/* Takes a birth date and adds a century to it if not present, based on what delimiter it would use in an ID number.
+	 * Assumes that the birth date is in the format (YY)?YYMMDD.
 	 *  
 	 * It is assumed the year implies the latest possible century. If delimiter is +, the year is 
 	 * assumed to have occurred at least a century ago.
-	 * @param personalNumber  - 
+	 * 
+	 * @param birthDate  - The birth date that may or may not have a century in the year.
+	 * @param delimiter  - The delimiter that the birth date would use in an ID number
 	 * 
 	 * @return A birth date in the format of YYYYMMDD
 	 */
@@ -209,12 +219,13 @@ public class PersonalNumberValidator {
 	
 	/* Retrieves the birth date, delimiter, and control numbers from a personal, coordination or organisation number.
 	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX.
+	 * 
 	 * @param idNumber  - The ID number to retrieve birth date, delimiter, and control numbers from
 	 * 
 	 * @return An array containing the birth date with or without the century, eventual delimiter, and control numbers
 	 * 		   of a given ID number.
 	 */
-	private static String[] separateDateDelimiterControl(String idNumber) {
+	protected static String[] separateDateDelimiterControl(String idNumber) {
 		int strLength = idNumber.length();
 		String birthDate = "";
 		String delimiter = "";
@@ -239,8 +250,9 @@ public class PersonalNumberValidator {
 	
 	
 	
-	/* Checks whether a given ID number conforms to Luhn's algorithm
-	 * Assumes that the given ID number is in the format (YY)?YYMMDD[-+]?XXXX,
+	/* Checks whether a given ID number conforms to Luhn's algorithm. 
+	 * ID number must be in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * 
 	 * @param idNumber  - The ID number to calculate Luhn's algorithm on.
 	 * 
 	 * @return A boolean stating whether the ID number gives a correct result in Luhn's algorithm
@@ -256,8 +268,8 @@ public class PersonalNumberValidator {
 		for(int i = 0; i < noDelimiterID.length(); ++i) {
 			int value = Integer.parseInt(String.valueOf(noDelimiterID.charAt(i)));
 			
-			if(i % 2 == 0) { value = value*2;}
-			else { value = value*1;}
+			if(i % 2 == 0) { value = value*2; }
+			else { value = value*1; }
 			
 			multipliedSum += (value/10) + (value % 10);
 		}
