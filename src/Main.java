@@ -11,7 +11,7 @@ public class Main {
 	 * 
 	 * @return None
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		if(args == null || args.length == 0) {
 			ValidityCheck validityChecker = new ValidityCheck();
 			validityChecker.validateInput();

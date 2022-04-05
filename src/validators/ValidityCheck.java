@@ -1,8 +1,10 @@
 package validators;
 
-import java.io.File;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.charset.*;
+import java.nio.file.*;
 import java.util.Scanner;
 
 /*
@@ -10,11 +12,11 @@ import java.util.Scanner;
  */
 public class ValidityCheck {
 
+	private static int createdLogs = 0;
 	private File inputFile = null;
 	private InputStream inputSource = null;
 	
 	private Scanner input = null;
-	
 	
 	/*Creates a new PersonalNumberValidator that will scan STDIN for any invalid Swedish
 	 * juridical personal numbers and log them
@@ -40,23 +42,26 @@ public class ValidityCheck {
 	
 	
 	/*
-	 * Reads a preset input source until the end and logs any inputs that are not considered valid personal, coordination
-	 * or organisation numbers in a new file.
+	 * Reads a preset input source until the end and logs any inputs that are not considered valid personal, 
+	 * coordination or organisation numbers in a new file.
 	 * 
 	 * @return None
 	 */
-	public void validateInput() {
-		
+	public void validateInput() throws IOException{
+		//File log = createOutputLog();
+		//log.setWritable(true, false);
 		
 		while(input.hasNextLine()){
 			String idNumber = input.nextLine().strip();
 			
-			if(!idNumber.isBlank()) {
+			if(idNumber.isBlank()) {
 				continue;
 			}
 			else if(!isValidIdNumber(idNumber)) {
-				System.out.println();
+				System.out.println(idNumber);
 				//Log in newly created output file
+				// log.write()
+				// file.close()
 				//Log incorrect numbers here? In main? Separate module?
 			}
 		}
@@ -72,6 +77,7 @@ public class ValidityCheck {
 	 * 		   Returns false if none of these.
 	 */
 	public static boolean isValidIdNumber(String idNumber) {
+		
 		if(PersonalNumberValidator.isValidPersonalNumber(idNumber)) {
 			return true;
 		}
@@ -81,8 +87,23 @@ public class ValidityCheck {
 		else if(OrganisationNumberValidator.isValidOrganisationNumber(idNumber)) {
 			return true;
 		}
-		
 		return false;
+	}
+	
+	
+	public File createOutputLog() throws IOException{
+		String logPath = "./src/tests/testData/invalidLogs/invalidNumbersLog";
+		String logName = "invalidIdNumbersLog";
+		
+		File log;
+		try {
+			log	= File.createTempFile(logName + ++createdLogs, ".txt", new File(logPath));
+		} catch(IOException e) {
+			System.out.println("Output log could not be created. Aborting");
+			throw e;
+		}
+		
+		return log;
 	}
 	
 	

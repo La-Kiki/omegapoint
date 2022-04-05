@@ -12,7 +12,9 @@ import validators.ValidityCheck;
 public class ValidityCheckTests {
 	String invalidFilePath = "/not/a/real/file.txt";
 	String validFilePath = new File("src/tests/testData/validPersonalNumbers.txt").getAbsolutePath();
-	String[] testFiles; 
+	
+	File testFilesDirectory = new File("src/tests/testData/").getAbsoluteFile(); 
+	File[] testFiles = new File("src/tests/testData/").listFiles();
 	
 	@BeforeAll
 	public static void setup() {
@@ -33,14 +35,24 @@ public class ValidityCheckTests {
     }
 	
 	@Test
-    public void validityCheckTestValidPersonalNumber() throws FileNotFoundException{
-		ValidityCheck checker = new ValidityCheck(validFilePath);
-		
-		assertEquals(checker.getClass(), ValidityCheck.class);
-    }
-	
-	@Test
 	public void testWithExistingTestFiles() {
+		for(File f: testFiles) {
+			try {
+				if(f.isDirectory()) {
+					continue;
+				}
+				String filePath = f.getAbsolutePath();
+				ValidityCheck checker = new ValidityCheck(filePath);
+				checker.validateInput();
+				
+			} catch(FileNotFoundException e) {
+				System.out.println("Default test file located at " + f + " could not be accessed. Ignoring test");
+			}
+			catch(IOException e) {
+				System.out.println("Could not create output log file - Check permissions. Ignoring test");
+			}
+			
+		}
 		
 	}
 	
