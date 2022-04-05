@@ -10,8 +10,7 @@ public class CoordinationNumberValidator extends PersonalNumberValidator{
 	 * @return 
 	 */
 	public static boolean isValidCoordinationNumber(String coordinationNumber) {
-		if(isValidFormat(coordinationNumber) && isValidCoordinationNumberDate(coordinationNumber) 
-				&& fulfillsLuhnsAlgorithm(subtract60FromCoordinationNumber(coordinationNumber))) {
+		if(isValidFormat(coordinationNumber) && isValidCoordinationNumberDate(coordinationNumber) && fulfillsLuhnsAlgorithm(coordinationNumber)) {
 			return true;
 		}
 		
@@ -26,10 +25,8 @@ public class CoordinationNumberValidator extends PersonalNumberValidator{
 	 */
 	public static boolean isValidCoordinationNumberDate(String coordinationNumber) {
 		String personalNumber = subtract60FromCoordinationNumber(coordinationNumber);
-		System.out.println(personalNumber);
 		
-		if(PersonalNumberValidator.isValidDate(personalNumber)) {
-			System.out.println("true");
+		if(PersonalNumberValidator.isValidBirthDate(personalNumber)) {
 			return true;
 		}
 		

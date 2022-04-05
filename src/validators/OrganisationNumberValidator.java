@@ -11,8 +11,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * @return 
 	 */
 	public static boolean isValidOrganisationNumber(String orgNumber) {
-		if(isValidFormat(orgNumber) && isValidOrgNumberDate(orgNumber) 
-				&& isValidOrganisationValue(orgNumber) && fulfillsLuhnsAlgorithm(orgNumber)) {
+		if(isValidFormat(orgNumber) && isValidOrganisationValue(orgNumber) && fulfillsLuhnsAlgorithm(orgNumber)) {
 			return true;
 		}
 		
@@ -21,26 +20,23 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	
 	
 	/*
-	 * Checks whether a given string conforms to the number format limitations of a Swedish organisation number.
-	 * @param
-	 * 
-	 * @return 
-	 */
-	private static boolean isValidOrgNumberDate(String orgNumber) {
-		
-		
-		return false;
-	}
-	
-	/*
 	 * 
 	 * @param
 	 * 
 	 * @return 
 	 */
 	public static boolean isValidOrganisationValue(String orgNumber) {
-
-		
+		if(!PersonalNumberValidator.isValidFormat(orgNumber)) {
+			return false;
+		}
+			String birthDate = PersonalNumberValidator.getBirthDate(orgNumber, true);
+			String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
+			
+			int middleValue = Integer.parseInt(middleNums);
+			if(middleValue >= 20) {
+				return true;
+			}
+			
 		return false;
 	}
 }

@@ -34,7 +34,7 @@ public class PersonalNumberValidator {
 	 * @return 
 	 */
 	public static boolean isValidPersonalNumber(String personalNumber) {
-		if(isValidFormat(personalNumber) && isValidDate(personalNumber) && fulfillsLuhnsAlgorithm(personalNumber)) {
+		if(isValidFormat(personalNumber) && isValidBirthDate(personalNumber) && fulfillsLuhnsAlgorithm(personalNumber)) {
 			return true;
 		}
 		
@@ -51,12 +51,12 @@ public class PersonalNumberValidator {
 	public static boolean isValidFormat(String idNumber) {
 		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX
 		String shortDateNoDivider = "[0-9]{10}";
-		String longDateNoDivider = "[1-9][0-9]" + shortDateNoDivider;
+		String longDateNoDivider = "[0-9][0-9]" + shortDateNoDivider;
 		
 		// idNumber may have a + or - as divider between birth date and control numbers. 
 		// YYMMDD-XXXX, YYYYMMDD-XXXX, YYMMDD+XXXX or YYYYMMDD+XXXX
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		String longDateWithDivider = "[1-9][0-9]" + shortDateWithDivider;
+		String longDateWithDivider = "[0-9][0-9]" + shortDateWithDivider;
 		
 		
 		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {
@@ -99,7 +99,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return 
 	 */
-	public static boolean isValidDate(String personalNumber) {
+	public static boolean isValidBirthDate(String personalNumber) {
 		if(!isValidFormat(personalNumber)) {
 			return false;
 		}
@@ -223,7 +223,7 @@ public class PersonalNumberValidator {
 	
 	/*
 	 * Assumes that the given ID number conforms to one of the following formats: 
-	 * YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
+	 * (YY)?YYMMDD[-+]?XXXX,
 	 * @param idNumber  - 
 	 * 
 	 * @return 
@@ -243,12 +243,9 @@ public class PersonalNumberValidator {
 			int value = Integer.parseInt(String.valueOf(multipliedNumbers.charAt(i)));
 			int multipliedValue= 0;
 			
-			if(i % 2 == 0) {
-				multipliedValue = value*2;				
-			}
-			else {
-				multipliedValue = value*1;
-			}
+			if(i % 2 == 0) { multipliedValue = value*2;}
+			else { multipliedValue = value*1;}
+			
 			multipliedSum += (multipliedValue/10) + (multipliedValue % 10);
 		}
 		

@@ -23,7 +23,7 @@ public class CoordinationNumberValidatorTests {
 	
 	@Test
     public void testValidCoordinationNumber() {
-		boolean isValidCoordNum = CoordinationNumberValidator.isValidCoordinationNumberDate("190910799824");
+		boolean isValidCoordNum = CoordinationNumberValidator.isValidCoordinationNumber("190910799824");
 		
 		assertTrue(isValidCoordNum);
 	}

@@ -67,36 +67,36 @@ public class PersonalNumberValidatorTests {
 	
 	@Test
     public void testDateWithValidYear() {
-		boolean validLeapYear = PersonalNumberValidator.isValidDate("160229-1234");
+		boolean validLeapYear = PersonalNumberValidator.isValidBirthDate("160229-1234");
 		
 		assertTrue(validLeapYear);
     }
 	
 	@Test
     public void testDateWithValidDateDelimiter() {
-		boolean validDate = PersonalNumberValidator.isValidDate("220531-1234");
+		boolean validDate = PersonalNumberValidator.isValidBirthDate("220531-1234");
 		
 		assertTrue(validDate);
     }
 	
 	@Test
     public void testDateWithValidDateWithoutDelimiter() {
-		boolean validShortDate = PersonalNumberValidator.isValidDate("2201311234");
-		boolean validLongDate = PersonalNumberValidator.isValidDate("192201311234");
+		boolean validShortDate = PersonalNumberValidator.isValidBirthDate("2201311234");
+		boolean validLongDate = PersonalNumberValidator.isValidBirthDate("192201311234");
 		
 		assertTrue(validShortDate);
     }
 	
 	@Test
     public void testDateWithInvalidDay() {
-		boolean invalidDay = PersonalNumberValidator.isValidDate("160240-1234");
+		boolean invalidDay = PersonalNumberValidator.isValidBirthDate("160240-1234");
 		
 		assertFalse(invalidDay);
     }
 	
 	@Test
     public void testDateWithInvalidString() {
-		boolean invalidString = PersonalNumberValidator.isValidDate("19YY0130-X234");
+		boolean invalidString = PersonalNumberValidator.isValidBirthDate("19YY0130-X234");
         
 		assertFalse(invalidString);
     }
