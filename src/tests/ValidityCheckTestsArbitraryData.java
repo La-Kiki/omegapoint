@@ -1,40 +1,27 @@
 package tests;
 
-import static org.junit.Assert.*;
-import org.junit.*;
-import org.hamcrest.*;
-import org.junit.jupiter.api.BeforeAll;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.junit.Test;
 
 import validators.ValidityCheck;
 
-public class ValidityCheckTests {
-	String invalidFilePath = "/not/a/real/file.txt";
-	String validFilePath = new File("src/tests/testData/validPersonalNumbers.txt").toString();
-	
+public class ValidityCheckTestsArbitraryData {
+
 	File testFilesDirectory = new File("src/tests/testData/"); 
 	File[] testFiles = testFilesDirectory.listFiles();
 	
 	File expectedLogOutputsDir = new File("src/tests/testData/expectedLogOutput/");
 	File[] expectedLogOutputs = expectedLogOutputsDir.listFiles();
-
 	
 	@Test
-    public void validityCheckConstructorWithInvalidFile() {
-		assertThrows(FileNotFoundException.class, () -> new ValidityCheck(invalidFilePath));
-    }
-	
-	@Test
-    public void validityCheckConstructorWithValidFile() throws FileNotFoundException, IOException{
-		ValidityCheck checker = new ValidityCheck(validFilePath);
-		
-		assertEquals(checker.getClass(), ValidityCheck.class);
-    }
-	
-	@Test
-	public void testWithExistingTestFiles() {
-		
+	public void testWithAnyTestFiles() {
 		for(File f: testFiles) {
 			if(f.isDirectory()) {
 				continue;
@@ -69,6 +56,4 @@ public class ValidityCheckTests {
 			
 		}
 	}
-	
-	
 }

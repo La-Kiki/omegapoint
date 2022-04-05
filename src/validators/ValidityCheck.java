@@ -3,7 +3,6 @@ package validators;
 import java.io.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.Scanner;
 
@@ -11,46 +10,79 @@ import java.util.Scanner;
  * A class for evaluating whether an arbitrary number of personal, coordination, or organisation numbers are valid or not.
  */
 public class ValidityCheck {
-
-	private static int createdLogs = 0;
+	// Currently unchangeable. Can be adjusted in the future with a set-method or adding constructor
+	private final String outputLogDirectory = "src/outputLogs/";
+	private String outputLogPath = outputLogDirectory + "invalidLog_";
+	
+	// The file where the output log will be written to
+	BufferedWriter logWriter = null;
+	
+	// Source may either be an existing file or an input stream
 	private File inputFile = null;
 	private InputStream inputSource = null;
 	
 	private Scanner input = null;
 	
 	/*Creates a new PersonalNumberValidator that will scan STDIN for any invalid Swedish
-	 * juridical personal numbers and log them
+	 * ID numbers and log them in a predetermined directory
 	 * 
 	 * @return A new PersonalNumberValidator object
 	 */
-	public ValidityCheck() {
+	public ValidityCheck() throws IOException {
 		this.inputSource = System.in;
 		this.input = new Scanner(this.inputSource);
+		
+		initializeLogDirAndFile();
 	}
 	
 	/* Creates a new PersonalNumberValidator that will scan an input file for any invalid Swedish
-	 * juridical personal numbers and log them
+	 * ID numbers and log them in a predetermined directory
 	 * @param filePath  - The relative or absolute file path of the input file to scan from
 	 * 
 	 * @return A new PersonalNumberValidator object
 	 */
-	public ValidityCheck(String filePath) throws FileNotFoundException{
+	public ValidityCheck(String filePath) throws FileNotFoundException, IOException{
 		this.inputFile = new File(filePath);
 		this.input = new Scanner(this.inputFile);
+		
+		initializeLogDirAndFile();
+		
 	}
 	
+	/*
+	 * Creates a log file name in a predetermined directory for a given input source's output log, and
+	 * initializes the object that will write to the log.
+	 * 
+	 * @return None
+	 */
+	private void initializeLogDirAndFile() throws IOException{
+		createOutputLogPath();
+		Files.createDirectories(Paths.get(this.outputLogDirectory));
+		this.logWriter = new BufferedWriter(new FileWriter(outputLogPath));
+	}
+	
+	/*
+	 * Creates a file name in a predetermined directory for a given input source's output log.
+	 * 
+	 * @return None
+	 */
+	private void createOutputLogPath() throws IOException{
+		if(inputFile != null) {
+			this.outputLogPath = this.outputLogPath + inputFile.getName();
+		}
+		else {
+			this.outputLogPath = this.outputLogPath + "STDIN";
+		}
+	}
 	
 	
 	/*
 	 * Reads a preset input source until the end and logs any inputs that are not considered valid personal, 
-	 * coordination or organisation numbers in a new file.
+	 * coordination or organisation numbers into a new file.
 	 * 
-	 * @return None
+	 * @return The file path to a newly created output log with invalid ID numbers
 	 */
-	public void validateInput() throws IOException{
-		//File log = createOutputLog();
-		//log.setWritable(true, false);
-		
+	public String validateInput() throws IOException{
 		while(input.hasNextLine()){
 			String idNumber = input.nextLine().strip();
 			
@@ -58,15 +90,12 @@ public class ValidityCheck {
 				continue;
 			}
 			else if(!isValidIdNumber(idNumber)) {
-				System.out.println(idNumber);
-				//Log in newly created output file
-				// log.write()
-				// file.close()
-				//Log incorrect numbers here? In main? Separate module?
+				writeToLog(idNumber);
 			}
 		}
+		this.logWriter.flush();
 		
-		//TODO: Read separation of concerns/
+		return outputLogPath;
 	}
 	
 	/* Checks whether an ID number is either a valid personal, coordination, or organisation number.
@@ -90,26 +119,18 @@ public class ValidityCheck {
 		return false;
 	}
 	
-	
-	public File createOutputLog() throws IOException{
-		String logPath = "./src/tests/testData/invalidLogs/invalidNumbersLog";
-		String logName = "invalidIdNumbersLog";
-		
-		File log;
-		try {
-			log	= File.createTempFile(logName + ++createdLogs, ".txt", new File(logPath));
-		} catch(IOException e) {
-			System.out.println("Output log could not be created. Aborting");
-			throw e;
-		}
-		
-		return log;
+	/*
+	 * Writes an ID number to the predetermined log file.
+	 * 
+	 * @return None
+	 */
+	private void writeToLog(String idNumber) throws IOException {
+		this.logWriter.write(idNumber);
+		this.logWriter.newLine();
 	}
 	
-	
-	
 	/*
-	 * Closes the input source that is being read for juridical personal numbers
+	 * Closes the input source that is being read for ID numbers
 	 * 
 	 * @return None
 	 */
