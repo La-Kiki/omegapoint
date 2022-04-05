@@ -1,13 +1,15 @@
 package validators;
 
-
+/*
+ * A class for determining if a Swedish coordination number is considered valid or not.
+ */
 public class CoordinationNumberValidator extends PersonalNumberValidator{
 	
-	/*
+	/*  Checks if a given coordination number conforms to a correct format, date, and to the Luhn algorithm.
+	 * Accepts coordination numbers in the format (YY)?YYMMDD[-+]?XXXX
+	 * @param orgNumber  - The coordination number to be validated
 	 * 
-	 * @param
-	 * 
-	 * @return 
+	 * @return A boolean stating whether the given coordination number is valid or not
 	 */
 	public static boolean isValidCoordinationNumber(String coordinationNumber) {
 		if(isValidFormat(coordinationNumber) && isValidCoordinationNumberDate(coordinationNumber) && fulfillsLuhnsAlgorithm(coordinationNumber)) {

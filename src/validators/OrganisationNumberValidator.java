@@ -1,14 +1,18 @@
 package validators;
 
 
+/*
+ *  A class for determining if a Swedish organization number is considered valid or not.
+ */
 public class OrganisationNumberValidator extends PersonalNumberValidator{
 
 	
 	/*
+	 * Checks if a given organisation number conforms to a correct format, value, and to the Luhn algorithm.
+	 * Accepts organisation numbers in the format (YY)?YYMMDD[-+]?XXXX
+	 * @param orgNumber  - The organisation number to be validated
 	 * 
-	 * @param
-	 * 
-	 * @return 
+	 * @return A boolean stating whether the given organisation number is valid or not
 	 */
 	public static boolean isValidOrganisationNumber(String orgNumber) {
 		if(isValidFormat(orgNumber) && isValidOrganisationValue(orgNumber) && fulfillsLuhnsAlgorithm(orgNumber)) {
@@ -29,13 +33,14 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 		if(!PersonalNumberValidator.isValidFormat(orgNumber)) {
 			return false;
 		}
-			String birthDate = PersonalNumberValidator.getBirthDate(orgNumber, true);
-			String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
-			
-			int middleValue = Integer.parseInt(middleNums);
-			if(middleValue >= 20) {
-				return true;
-			}
+		String birthDate = PersonalNumberValidator.getBirthDate(orgNumber, true);
+		String delimiter = PersonalNumberValidator.getDelimiter(orgNumber);
+		
+		String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
+		int middleValue = Integer.parseInt(middleNums);
+		if(middleValue >= 20 && (delimiter.equals("-") || delimiter.equals(""))) {
+			return true;
+		}
 			
 		return false;
 	}

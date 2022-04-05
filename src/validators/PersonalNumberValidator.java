@@ -5,12 +5,13 @@ import java.time.format.*;
 import java.time.*;
 
 /*
- * A class for determining if a Swedish personal number, coordination number, or organization number is considered valid or not.
+ * A class for determining if a Swedish personal number is considered valid or not.
  */
 public class PersonalNumberValidator {
 
-	private static DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("uuuuMMdd").withResolverStyle(ResolverStyle.STRICT);;
-	
+	private static DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("uuuuMMdd")
+													.withResolverStyle(ResolverStyle.STRICT);
+
 	private static final int CURRENT_YEAR = 2022;
 	private static final int CURRENT_DECADE = 22;
 	
@@ -26,12 +27,11 @@ public class PersonalNumberValidator {
 	//TODO: Consider using enums instead. Separate module?
 	
 	
-	/*
-	 *  Assumes that the given personal number conforms to one of the following formats: 
-	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param personalNumber  - 
+	/* Checks if a given personal number conforms to a correct format, date, and to the Luhn algorithm.
+	 * Accepts personal numbers in the format (YY)?YYMMDD[-+]?XXXX.
+	 * @param personalNumber  - The personal number to be validated
 	 * 
-	 * @return 
+	 * @return A boolean stating whether the given personal number is valid or not
 	 */
 	public static boolean isValidPersonalNumber(String personalNumber) {
 		if(isValidFormat(personalNumber) && isValidBirthDate(personalNumber) && fulfillsLuhnsAlgorithm(personalNumber)) {
@@ -42,21 +42,20 @@ public class PersonalNumberValidator {
 	}
 	
 	
-	/*
+	/* Checks if a given personal, coordination or organisation number conforms to the format (YY)?YYMMDD[-+]?XXXX.
+	 * @param idNumber  - The ID number to be checked
 	 * 
-	 * @param idNumber  - 
-	 * 
-	 * @return 
+	 * @return A boolean stating whether the given ID number follows a valid format
 	 */
 	public static boolean isValidFormat(String idNumber) {
 		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX
 		String shortDateNoDivider = "[0-9]{10}";
-		String longDateNoDivider = "[0-9][0-9]" + shortDateNoDivider;
+		String longDateNoDivider = "[1-2][0-9]" + shortDateNoDivider;
 		
 		// idNumber may have a + or - as divider between birth date and control numbers. 
-		// YYMMDD-XXXX, YYYYMMDD-XXXX, YYMMDD+XXXX or YYYYMMDD+XXXX
+		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		String longDateWithDivider = "[0-9][0-9]" + shortDateWithDivider;
+		String longDateWithDivider = "[1-2][0-9]" + shortDateWithDivider;
 		
 		
 		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {
@@ -74,11 +73,11 @@ public class PersonalNumberValidator {
 		return false;
 	}
 	
-	/*
+	/* Checks whether a year in an personal or coordination number was 100 years ago to warrant a + as delimiter.
+	 * Assumes ID number is in the format YYYYMMDD[-+]?XXXX.
+	 * @param idNumber  - The ID number to be checked
 	 * 
-	 * @param idNumber  - 
-	 * 
-	 * @return 
+	 * @return A boolean stating whether the ID number can use a plus delimiter
 	 */
 	private static boolean isPlusDividerValid(String idNumber) {
 		int year = Integer.parseInt(idNumber.substring(0,4));
@@ -86,25 +85,28 @@ public class PersonalNumberValidator {
 		if(year <= CURRENT_YEAR -100) {
 			return true;
 		}
+		//TODO: Use LocalDate to compare current year instead of constant
 		
 		return false;
 	}
 	
 	
 	
-	/*
-	 *  Assumes that the given ID number conforms to one of the following formats: 
-	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param personalNumber  - 
+	/* Checks whether a birth date in a personal number is a past or current date. Includes leap years.
+	 * Must subtract 60 from the birth date of a coordinate number to be valid.
+	 * Assumes the personal number is in the format (YY)?YYMMDD[-+]?XXXX. 
 	 * 
-	 * @return 
+	 * Unless year is specified with YYYY, it is assumed the year implies the latest possible century. If 
+	 * using a + delimiter, the year is assumed to have occurred at least a century ago.
+	 * @param personalNumber  - The personal number to be checked.
+	 * 
+	 * @return A boolean stating whether the birth date in the given personal number is a past or current date.
 	 */
 	public static boolean isValidBirthDate(String personalNumber) {
 		if(!isValidFormat(personalNumber)) {
 			return false;
 		}
 		
-		//TODO: Make LocalDate check that date hasn't passed yet
 		String birthDate = getBirthDate(personalNumber, true);
 		int year = Integer.parseInt(birthDate.substring(0, 4));
 		// If date parsing fails it is not a valid date
@@ -115,6 +117,7 @@ public class PersonalNumberValidator {
 			catch(DateTimeParseException e) {
 				return false;
 			}
+			//TODO: Make LocalDate check that date hasn't passed yet
 			return true;
 		}
 		
@@ -122,18 +125,20 @@ public class PersonalNumberValidator {
 	}
 	
 	
-	/*
-	 *  Assumes that the given ID number conforms to one of the following formats: 
-	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param personalNumber  - 
-	 * @param addCentury  - 
+	
+	/* Retrieves the birth date from an ID number in either the format YYYYMMDD or YYMMDD.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
 	 * 
-	 * @return A birth date in the format YYYYMMDD
+	 * Unless year is specified with YYYY, it is assumed the year implies the latest possible century. If 
+	 * using a + delimiter, the year is assumed to have occurred at least a century ago.
+	 * @param idNumber  - The ID number to retrieve the birth date from
+	 * @param addCentury  - A boolean stating whether the birth date should include the century or not
+	 * 
+	 * @return A birth date in the format YYYYYMMDD or YYYMMDD
 	 */
-	public static String getBirthDate(String personalNumber, boolean addCentury) {
-		String[] segments = separateDateAndControlNumbers(personalNumber);
-		String birthDate = segments[0];
-		String delimiter = segments[1];
+	public static String getBirthDate(String idNumber, boolean addCentury) {
+		String birthDate = separateDateDelimiterControl(idNumber)[0];
+		String delimiter = getDelimiter(idNumber);
 		
 		if(birthDate.length() == SHORT_BIRTH_DATE && addCentury) {
 			birthDate = addCenturyToDate(birthDate, delimiter);
@@ -145,28 +150,72 @@ public class PersonalNumberValidator {
 		return birthDate;
 	}
 	
-	/*
-	 *  Assumes that the given ID number conforms to one of the following formats: 
-	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
-	 * @param personalNumber  - 
+	/* Retrieves the delimiter from an personal, coordination or organisation number if present. Otherwise returns an empty string.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * @param idNumber  - The ID number to retrieve the delimiter from
+	 * 
+	 * @return The delimiter if present. Otherwise an empty string
+	 */
+	public static String getDelimiter(String idNumber) {
+		return separateDateDelimiterControl(idNumber)[1];
+	}
+	
+	/* Retrieves the control numbers from a personal, coordination or organisation number.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * @param idNumber  - The ID number to retrieve the control numbers from
 	 * 
 	 * @return A control number in the format XXXX
 	 */
-	public static String getControlNumbers(String personalNumber) {
-		
-		return separateDateAndControlNumbers(personalNumber)[2];
+	public static String getControlNumbers(String idNumber) {
+		return separateDateDelimiterControl(idNumber)[2];
 	}
 	
 	
-	/*
-	 *  Assumes that the given ID number conforms to one of the following formats: 
-	 *  YYMMDD-XXXX, YYMMDD+XXXX, YYYYMMDD-XXXX, YYYYMMDD+XXXX, YYMMDDXXXX, YYYYMMDDXXXX
+	
+	/* Takes a personal number and adds a century to the birth date if not present.
+	 * Assumes that the given ID number is in the format (YY)?YYMMDD.
+	 *  
+	 * It is assumed the year implies the latest possible century. If delimiter is +, the year is 
+	 * assumed to have occurred at least a century ago.
 	 * @param personalNumber  - 
 	 * 
-	 * @return An array containing the birthdate with or without the century, eventual delimiter, and control number.
+	 * @return A birth date in the format of YYYYMMDD
 	 */
-	private static String[] separateDateAndControlNumbers(String personalNumber) {
-		int strLength = personalNumber.length();
+	private static String addCenturyToDate(String birthDate, String delimiter) {
+		int strLength = birthDate.length();
+		int decade = Integer.parseInt(birthDate.substring(0, 2));
+		
+		if(strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("+")) {
+			if(decade <= CURRENT_DECADE) {
+				birthDate = "19" + birthDate;
+			}
+			else {
+				birthDate = "18" + birthDate;
+			}
+			//DEFAULTS TO 1922-1900 INSTEAD OF 1822-1800
+		}
+		else if(strLength == SHORT_BIRTH_DATE || (strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("-"))) {
+			if(decade > CURRENT_DECADE) {
+				birthDate = "19" + birthDate;
+			}
+			else {
+				birthDate = "20" + birthDate;
+			}
+		}
+		
+		return birthDate;
+	}
+	
+	
+	/* Retrieves the birth date, delimiter, and control numbers from a personal, coordination or organisation number.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX.
+	 * @param idNumber  - The ID number to retrieve birth date, delimiter, and control numbers from
+	 * 
+	 * @return An array containing the birth date with or without the century, eventual delimiter, and control numbers
+	 * 		   of a given ID number.
+	 */
+	private static String[] separateDateDelimiterControl(String idNumber) {
+		int strLength = idNumber.length();
 		String birthDate = "";
 		String delimiter = "";
 		String controlNums = "";
@@ -175,78 +224,42 @@ public class PersonalNumberValidator {
 		 * Leave 6 or 8 birth numbers respectively.
 		 */
 		if(strLength == LONG_DATE_NO_DIVIDER || strLength == SHORT_DATE_NO_DIVIDER) {
-			birthDate = personalNumber.substring(0, strLength -4);
-			controlNums = personalNumber.substring(strLength -4, strLength);
+			birthDate = idNumber.substring(0, strLength -4);
+			controlNums = idNumber.substring(strLength -4, strLength);
 		}
 		else if(strLength == LONG_DATE_WITH_DIVIDER || strLength == SHORT_DATE_WITH_DIVIDER) {
-			birthDate = personalNumber.substring(0, strLength -5);
-			delimiter = personalNumber.substring(strLength -5, strLength -4);
-			controlNums = personalNumber.substring(strLength -4, strLength);
+			String[] numSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))");
+			birthDate = numSegments[0];
+			delimiter = numSegments[1];
+			controlNums = numSegments[2];
 		}
 		
 		return new String[]{birthDate, delimiter, controlNums};
 	}
 	
-	/*
-	 *  . Assumes that the given ID number conforms to the following format: YYMMDD
-	 * @param personalNumber  - 
-	 * @param delimiter  - 
-	 * 
-	 * @return A birthdate in the format of YYYYMMDD
-	 */
-	private static String addCenturyToDate(String personalNumber, String delimiter) {
-		int strLength = personalNumber.length();
-		int decade = Integer.parseInt(personalNumber.substring(0, 2));
-		
-		if(strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("+")) {
-			if(decade <= CURRENT_DECADE) {
-				personalNumber = "19" + personalNumber;
-			}
-			else {
-				personalNumber = "18" + personalNumber;
-			}
-			//DEFAULTS TO 1922-1900 INSTEAD OF 1822-1800
-		}
-		else if(strLength == SHORT_BIRTH_DATE || (strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("-"))) {
-			if(decade > CURRENT_DECADE) {
-				personalNumber = "19" + personalNumber;
-			}
-			else {
-				personalNumber = "20" + personalNumber;
-			}
-		}
-		
-		return personalNumber;
-	}
 	
-
 	
-	/*
-	 * Assumes that the given ID number conforms to one of the following formats: 
-	 * (YY)?YYMMDD[-+]?XXXX,
-	 * @param idNumber  - 
+	/* Checks whether a given ID number conforms to Luhn's algorithm
+	 * Assumes that the given ID number is in the format (YY)?YYMMDD[-+]?XXXX,
+	 * @param idNumber  - The ID number to calculate Luhn's algorithm on.
 	 * 
-	 * @return 
+	 * @return A boolean stating whether the ID number gives a correct result in Luhn's algorithm
 	 */
 	public static boolean fulfillsLuhnsAlgorithm(String idNumber) {
 		if(!isValidFormat(idNumber)) {
 			return false;
 		}
 		
-		String date = getBirthDate(idNumber, false);
-		String controlNumbers = getControlNumbers(idNumber);
-		
-		String multipliedNumbers = date + controlNumbers;
+		String noDelimiterID = getBirthDate(idNumber, false) + getControlNumbers(idNumber);
 		int multipliedSum = 0;
 		
-		for(int i = 0; i < multipliedNumbers.length(); ++i) {
-			int value = Integer.parseInt(String.valueOf(multipliedNumbers.charAt(i)));
-			int multipliedValue= 0;
+		for(int i = 0; i < noDelimiterID.length(); ++i) {
+			int value = Integer.parseInt(String.valueOf(noDelimiterID.charAt(i)));
 			
-			if(i % 2 == 0) { multipliedValue = value*2;}
-			else { multipliedValue = value*1;}
+			if(i % 2 == 0) { value = value*2;}
+			else { value = value*1;}
 			
-			multipliedSum += (multipliedValue/10) + (multipliedValue % 10);
+			multipliedSum += (value/10) + (value % 10);
 		}
 		
 		if(multipliedSum % 10 == 0) {
