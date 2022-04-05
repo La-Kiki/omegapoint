@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+/*
+ * A class for evaluating whether an arbitrary number of personal, coordination, or organisation numbers are valid or not.
+ */
 public class ValidityCheck {
 
 	private File inputFile = null;
@@ -37,11 +40,13 @@ public class ValidityCheck {
 	
 	
 	/*
-	 *
+	 * Reads a preset input source until the end and logs any inputs that are not considered valid personal, coordination
+	 * or organisation numbers in a new file.
 	 * 
-	 * @return 
+	 * @return None
 	 */
 	public void validateInput() {
+		
 		
 		while(input.hasNextLine()){
 			String idNumber = input.nextLine().strip();
@@ -50,6 +55,7 @@ public class ValidityCheck {
 				continue;
 			}
 			else if(!isValidIdNumber(idNumber)) {
+				System.out.println();
 				//Log in newly created output file
 				//Log incorrect numbers here? In main? Separate module?
 			}
@@ -58,11 +64,12 @@ public class ValidityCheck {
 		//TODO: Read separation of concerns/
 	}
 	
-	/*
+	/* Checks whether an ID number is either a valid personal, coordination, or organisation number.
 	 * 
-	 * @param
+	 * @param idNumber  - The ID number that may or may not be valid
 	 * 
-	 * @return 
+	 * @return A boolean stating whether a given ID number is a valid personal, coordination, or organisation number. 
+	 * 		   Returns false if none of these.
 	 */
 	public static boolean isValidIdNumber(String idNumber) {
 		if(PersonalNumberValidator.isValidPersonalNumber(idNumber)) {
@@ -83,7 +90,7 @@ public class ValidityCheck {
 	/*
 	 * Closes the input source that is being read for juridical personal numbers
 	 * 
-	 * @return 
+	 * @return None
 	 */
 	public void closeInput() {
 		this.input.close();

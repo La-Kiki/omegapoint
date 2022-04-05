@@ -12,6 +12,7 @@ import validators.ValidityCheck;
 public class ValidityCheckTests {
 	String invalidFilePath = "/not/a/real/file.txt";
 	String validFilePath = new File("src/tests/testData/validPersonalNumbers.txt").getAbsolutePath();
+	String[] testFiles; 
 	
 	@BeforeAll
 	public static void setup() {
@@ -30,4 +31,21 @@ public class ValidityCheckTests {
 		
 		assertEquals(checker.getClass(), ValidityCheck.class);
     }
+	
+	@Test
+    public void validityCheckTestValidPersonalNumber() throws FileNotFoundException{
+		ValidityCheck checker = new ValidityCheck(validFilePath);
+		
+		assertEquals(checker.getClass(), ValidityCheck.class);
+    }
+	
+	@Test
+	public void testWithExistingTestFiles() {
+		
+	}
+	
+	@Test
+	public void testWithAnyTestFiles() {
+		
+	}
 }
