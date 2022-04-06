@@ -13,7 +13,7 @@ public class PersonalNumberValidator {
 	private static DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("uuuuMMdd")
 													.withResolverStyle(ResolverStyle.STRICT);
 
-	private static final int CURRENT_DECADE = LocalDate.now().getYear() - 2000; // Will only be correct throughout the 2000th century
+	private static final int CURRENT_DECADE = LocalDate.now().getYear() % 100;
 	private static final boolean ADD_CENTURY = true;
 	private static final boolean DONT_ADD_CENTURY = false;
 	
@@ -120,7 +120,6 @@ public class PersonalNumberValidator {
 		
 		try {
 			LocalDate idDate = LocalDate.parse(birthDate, dateFormat);
-			
 			if(idDate.equals(currentDate) || idDate.isBefore(currentDate)) {
 				return true;
 			}
@@ -153,7 +152,7 @@ public class PersonalNumberValidator {
 			birthDate = addCenturyToDate(birthDate, delimiter);
 		}
 		else if(birthDate.length() == LONG_BIRTH_DATE && !addCentury) {
-			birthDate = birthDate.substring(2);
+			birthDate = birthDate.substring(2); //Cuts off the century of a year
 		}
 		
 		return birthDate;
@@ -239,12 +238,13 @@ public class PersonalNumberValidator {
 		if(idLength == LONG_DATE_NO_DIVIDER || idLength == SHORT_DATE_NO_DIVIDER) {
 			birthDate = idNumber.substring(0, idLength -4);
 			controlNums = idNumber.substring(idLength -4, idLength);
+			// Cuts off 4 control numbers with offset -4
 		}
 		else if(idLength == LONG_DATE_WITH_DIVIDER || idLength == SHORT_DATE_WITH_DIVIDER) {
-			String[] numSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))");
-			birthDate = numSegments[0];
-			delimiter = numSegments[1];
-			controlNums = numSegments[2];
+			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))");
+			birthDate = idSegments[0];
+			delimiter = idSegments[1];
+			controlNums = idSegments[2];
 		}
 		
 		return new String[]{birthDate, delimiter, controlNums};
@@ -270,10 +270,11 @@ public class PersonalNumberValidator {
 		for(int i = 0; i < noDelimiterID.length(); ++i) {
 			int value = Integer.parseInt(String.valueOf(noDelimiterID.charAt(i)));
 			
-			if(i % 2 == 0) { value = value*2; }
-			else { value = value*1; }
+			if(i % 2 == 0) { 
+				value = value*2; 
+			}
 			
-			multipliedSum += (value/10) + (value % 10);
+			multipliedSum += (value/10) + (value % 10); //Integer division
 		}
 		
 		if(multipliedSum % 10 == 0) {
