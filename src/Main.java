@@ -15,7 +15,7 @@ public class Main {
 		if(args == null || args.length == 0) {
 			ValidityCheck validityChecker = new ValidityCheck();
 			validityChecker.validateInput();
-			validityChecker.closeInput();
+			validityChecker.closeResources();
 		}
 		
 		for(int i=0; i < args.length; ++i){
@@ -28,7 +28,7 @@ public class Main {
 				String outputLogPath = validityChecker.validateInput();
 				System.out.println("Created output log in " + outputLogPath);
 				
-				validityChecker.closeInput();
+				validityChecker.closeResources();
 			}
 			catch(FileNotFoundException e) {
 				System.out.println("File with name " + args[i] + " not found, ignoring.");

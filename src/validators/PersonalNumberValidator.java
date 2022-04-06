@@ -9,22 +9,24 @@ import java.time.*;
  */
 public class PersonalNumberValidator {
 
+	// Defines dates in the YYYMMDD format. Using this format to parse a non-existent date will result in a DateTimeParseException
 	private static DateTimeFormatter dateFormat =  DateTimeFormatter.ofPattern("uuuuMMdd")
 													.withResolverStyle(ResolverStyle.STRICT);
 
-	private static final int CURRENT_YEAR = 2022;
-	private static final int CURRENT_DECADE = 22;
+	private static final int CURRENT_DECADE = LocalDate.now().getYear() - 2000; // Will only be correct throughout the 2000th century
+	private static final boolean ADD_CENTURY = true;
+	private static final boolean DONT_ADD_CENTURY = false;
 	
-	//Constants for the different lengths of valid personal, coordinate, and organisation numbers.
+	//Constants for the different string lengths of valid personal, coordinate, and organisation numbers.
 	// Birth dates without or with century: YYMMDD or YYYYMMDD
 	protected static final int SHORT_BIRTH_DATE = 6;
 	protected static final int LONG_BIRTH_DATE = 8;
 	
-	//Without delimiters + or -
+	//Without delimiters + or -. YYMMDDXXXX or YYYYMMDDXXXX
 	protected static final int SHORT_DATE_NO_DIVIDER = 10;
 	protected static final int LONG_DATE_NO_DIVIDER = 12;
 			
-	//With delimiters + or -
+	//With delimiters + or -. YYMMDD-XXXX or YYYYMMDD-XXXX
 	protected static final int SHORT_DATE_WITH_DIVIDER = 11;
 	protected static final int LONG_DATE_WITH_DIVIDER = 13;
 	
@@ -57,7 +59,7 @@ public class PersonalNumberValidator {
 		String longDateNoDivider = "[1-2][0-9]" + shortDateNoDivider;
 		
 		// idNumber may have a + or - as divider between birth date and control numbers. 
-		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX
+		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX. Only millenia 1 or 2
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
 		String longDateWithDivider = "[1-2][0-9]" + shortDateWithDivider;
 		
@@ -85,12 +87,12 @@ public class PersonalNumberValidator {
 	 * @return A boolean stating whether the ID number can use a plus delimiter
 	 */
 	private static boolean isPlusDividerValid(String idNumber) {
-		int year = Integer.parseInt(idNumber.substring(0,4));
+		LocalDate idDate = LocalDate.parse(getBirthDate(idNumber, ADD_CENTURY), dateFormat);
+		LocalDate centuryAgo = LocalDate.now().minusYears(100);
 		
-		if(year <= CURRENT_YEAR -100) {
+		if(idDate.equals(centuryAgo) ||  idDate.isBefore(centuryAgo)){
 			return true;
 		}
-		//TODO: Use LocalDate to compare current year instead of constant
 		
 		return false;
 	}
@@ -113,24 +115,24 @@ public class PersonalNumberValidator {
 			return false;
 		}
 		
-		String birthDate = getBirthDate(personalNumber, true);
-		int year = Integer.parseInt(birthDate.substring(0, 4));
-		// If date parsing fails it is not a valid date
-		if(year <= CURRENT_YEAR) {
-			try {
-				LocalDate.parse(birthDate, dateFormat);
-			} 
-			catch(DateTimeParseException e) {
-				return false;
+		String birthDate = getBirthDate(personalNumber, ADD_CENTURY);
+		LocalDate currentDate = LocalDate.now();
+		
+		try {
+			LocalDate idDate = LocalDate.parse(birthDate, dateFormat);
+			
+			if(idDate.equals(currentDate) || idDate.isBefore(currentDate)) {
+				return true;
 			}
-			//TODO: Make LocalDate check that date hasn't passed yet
-			return true;
+		} 
+		catch(DateTimeParseException e) {
+			return false;
 		}
 		
 		return false;
 	}
 	
-	
+
 	
 	/* Retrieves the birth date from an ID number in either the format YYYYMMDD or YYMMDD.
 	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
@@ -192,10 +194,10 @@ public class PersonalNumberValidator {
 	 * @return A birth date in the format of YYYYMMDD
 	 */
 	private static String addCenturyToDate(String birthDate, String delimiter) {
-		int strLength = birthDate.length();
+		int idLength = birthDate.length();
 		int decade = Integer.parseInt(birthDate.substring(0, 2));
 		
-		if(strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("+")) {
+		if(idLength == SHORT_BIRTH_DATE +1 && delimiter.equals("+")) {
 			if(decade <= CURRENT_DECADE) {
 				birthDate = "19" + birthDate;
 			}
@@ -204,7 +206,7 @@ public class PersonalNumberValidator {
 			}
 			//DEFAULTS TO 1922-1900 INSTEAD OF 1822-1800
 		}
-		else if(strLength == SHORT_BIRTH_DATE || (strLength == SHORT_BIRTH_DATE +1 && delimiter.equals("-"))) {
+		else if(idLength == SHORT_BIRTH_DATE || (idLength == SHORT_BIRTH_DATE +1 && delimiter.equals("-"))) {
 			if(decade > CURRENT_DECADE) {
 				birthDate = "19" + birthDate;
 			}
@@ -226,7 +228,7 @@ public class PersonalNumberValidator {
 	 * 		   of a given ID number.
 	 */
 	protected static String[] separateDateDelimiterControl(String idNumber) {
-		int strLength = idNumber.length();
+		int idLength = idNumber.length();
 		String birthDate = "";
 		String delimiter = "";
 		String controlNums = "";
@@ -234,11 +236,11 @@ public class PersonalNumberValidator {
 		/* Both conditionals separate the 4 control numbers. Second one separates the delimiter too
 		 * Leave 6 or 8 birth numbers respectively.
 		 */
-		if(strLength == LONG_DATE_NO_DIVIDER || strLength == SHORT_DATE_NO_DIVIDER) {
-			birthDate = idNumber.substring(0, strLength -4);
-			controlNums = idNumber.substring(strLength -4, strLength);
+		if(idLength == LONG_DATE_NO_DIVIDER || idLength == SHORT_DATE_NO_DIVIDER) {
+			birthDate = idNumber.substring(0, idLength -4);
+			controlNums = idNumber.substring(idLength -4, idLength);
 		}
-		else if(strLength == LONG_DATE_WITH_DIVIDER || strLength == SHORT_DATE_WITH_DIVIDER) {
+		else if(idLength == LONG_DATE_WITH_DIVIDER || idLength == SHORT_DATE_WITH_DIVIDER) {
 			String[] numSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))");
 			birthDate = numSegments[0];
 			delimiter = numSegments[1];
@@ -262,7 +264,7 @@ public class PersonalNumberValidator {
 			return false;
 		}
 		
-		String noDelimiterID = getBirthDate(idNumber, false) + getControlNumbers(idNumber);
+		String noDelimiterID = getBirthDate(idNumber, DONT_ADD_CENTURY) + getControlNumbers(idNumber);
 		int multipliedSum = 0;
 		
 		for(int i = 0; i < noDelimiterID.length(); ++i) {

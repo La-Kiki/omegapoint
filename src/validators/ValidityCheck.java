@@ -130,12 +130,13 @@ public class ValidityCheck {
 	}
 	
 	/*
-	 * Closes the input source that is being read for ID numbers
+	 * Closes the input source that is being read for ID numbers, and the output source that is being written to.
+	 * Should only be called by end of ValidityChecker object's lifespan, in order to not leave any resources open.
 	 * 
 	 * @return None
 	 */
-	public void closeInput() {
+	public void closeResources() throws IOException{
 		this.input.close();
+		this.logWriter.close();
 	}
-
 }

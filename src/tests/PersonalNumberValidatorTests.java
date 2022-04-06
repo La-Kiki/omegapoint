@@ -12,23 +12,29 @@ public class PersonalNumberValidatorTests {
 	File testData = null; 
 	
 	@Test
-    public void testFormatWithValidDividers() {
+    public void testFormatWithValidDashDividers() {
 		boolean validDashAndYear = PersonalNumberValidator.isValidFormat("19600220-1234");
-		boolean validPlusAndYear = PersonalNumberValidator.isValidFormat("19220331+1234");
-		boolean validPlus = PersonalNumberValidator.isValidFormat("000312+1234");
 		boolean validDash = PersonalNumberValidator.isValidFormat("221031-1234");
 		
 		assertTrue(validDashAndYear);
-		assertTrue(validPlusAndYear);
-		assertTrue(validPlus);
 		assertTrue(validDash);
     }
 	
 	@Test
-    public void testFormatWithInvalidDividers() {
+    public void testFormatWithValidPlusDividers() {
+		boolean validPlusAndYear = PersonalNumberValidator.isValidFormat("19220406+1234");
+		boolean validPlus = PersonalNumberValidator.isValidFormat("000312+1234");
+		
+		assertTrue(validPlusAndYear);
+		assertTrue(validPlus);
+    }
+	
+	
+	@Test
+    public void testFormatWithInvalidPlusDivider() {
         
 		boolean invalidPlusWithCentury = PersonalNumberValidator.isValidFormat("20120430+1234");
-		boolean invalidPlusWithYear = PersonalNumberValidator.isValidFormat("19230430+1234");
+		boolean invalidPlusWithYear = PersonalNumberValidator.isValidFormat("19230430+1234"); //DEPENDENT ON DATE BEING 2022, 04 BEFORE THE 30TH
 		
 		assertFalse(invalidPlusWithCentury);
 		assertFalse(invalidPlusWithYear);
@@ -83,7 +89,7 @@ public class PersonalNumberValidatorTests {
 	
 	@Test
     public void testDateWithValidDateDelimiter() {
-		boolean validDate = PersonalNumberValidator.isValidBirthDate("220531-1234");
+		boolean validDate = PersonalNumberValidator.isValidBirthDate("220331-1234");
 		
 		assertTrue(validDate);
     }
@@ -93,8 +99,16 @@ public class PersonalNumberValidatorTests {
 		boolean validShortDate = PersonalNumberValidator.isValidBirthDate("2201311234");
 		boolean validLongDate = PersonalNumberValidator.isValidBirthDate("192201311234");
 		
-		assertTrue(validShortDate);
+		assertTrue("Personal number with valid date but without delimiter considered an invalid date", validShortDate);
 		assertTrue(validLongDate);
+    }
+	
+	
+	@Test
+    public void testDateWithInvalidBirthDate() {
+		boolean validDate = PersonalNumberValidator.isValidBirthDate("20230331-1234");
+		
+		assertFalse(validDate);
     }
 	
 	@Test
@@ -110,6 +124,7 @@ public class PersonalNumberValidatorTests {
         
 		assertFalse(invalidString);
     }
+	
 	
 	@Test
     public void testLuhnsAlgorithmWithValidPersonalNumber() {

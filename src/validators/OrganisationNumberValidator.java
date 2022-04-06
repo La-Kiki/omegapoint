@@ -29,7 +29,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * 
 	 * @return A boolean stating whether a given organisation number follows a valid format
 	 */
-	public static boolean isValidOrgNumberFormat(String orgNumber) {
+	public static boolean isValidFormat(String orgNumber) {
 		if(PersonalNumberValidator.isValidFormat(orgNumber)) {
 			String delimiter = PersonalNumberValidator.getDelimiter(orgNumber);
 			if(delimiter.equals("-") || delimiter.equals("")){
