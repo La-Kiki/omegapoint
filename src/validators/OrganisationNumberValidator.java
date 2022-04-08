@@ -55,7 +55,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 		String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
 		int middleValue = Integer.parseInt(middleNums);
 		
-		if(middleValue >= 20 && isValidYear(birthDate)) {
+		if(middleValue >= 20 && isValidYearPrepend(birthDate)) {
 			return true;
 		}
 		
@@ -70,7 +70,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 * 
 	 * @return  A boolean stating whether a given organisation number contains a valid "year" value.
 	 */
-	private static boolean isValidYear(String birthDate) {
+	private static boolean isValidYearPrepend(String birthDate) {
 		if(birthDate.length() == LONG_BIRTH_DATE) {
 			
 			int century  = Integer.parseInt(birthDate.substring(0,2));

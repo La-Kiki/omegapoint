@@ -1,27 +1,38 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import validators.ValidityCheck;
 
-public class ValidityCheckTestsArbitraryData {
+import java.io.*;
 
-	File testFilesDirectory = new File("src/tests/testData/"); 
+public class TestValidityCheck {
+	String invalidFilePath = "/not/a/real/file.txt";
+	String validFilePath = new File("./src/tests/testData/validPersonalNumbers.txt").toString();
+	
+	File testFilesDirectory = new File("./src/tests/testData/"); 
 	File[] testFiles = testFilesDirectory.listFiles();
 	
-	File expectedLogOutputsDir = new File("src/tests/testData/expectedLogOutput/");
+	File expectedLogOutputsDir = new File("./src/tests/testData/expectedLogOutput/");
 	File[] expectedLogOutputs = expectedLogOutputsDir.listFiles();
+
 	
 	@Test
-	public void testWithAnyTestFiles() {
+    public void validityCheckConstructorWithInvalidFile() {
+		assertThrows(FileNotFoundException.class, () -> new ValidityCheck(invalidFilePath));
+    }
+	
+	@Test
+    public void validityCheckConstructorWithValidFile() throws FileNotFoundException, IOException{
+		ValidityCheck checker = new ValidityCheck(validFilePath);
+		
+		assertEquals(checker.getClass(), ValidityCheck.class);
+    }
+	
+	@Test
+	public void testWithExistingTestFiles() {
+		
 		for(File f: testFiles) {
 			if(f.isDirectory()) {
 				continue;
@@ -34,8 +45,8 @@ public class ValidityCheckTestsArbitraryData {
 				
 				BufferedReader logReader = new BufferedReader(new FileReader(outputLogPath));
 				
-				String expectedOutputpath = expectedLogOutputsDir.toString() + "/" + outputLogName;
-				BufferedReader expectedOutputReader = new BufferedReader(new FileReader(expectedOutputpath));
+				String expectedOutputPath = expectedLogOutputsDir.toString() + "/" + outputLogName;
+				BufferedReader expectedOutputReader = new BufferedReader(new FileReader(expectedOutputPath));
 				
 				String loggedOutput = "";
 				String expectedOutput = "";
@@ -56,4 +67,6 @@ public class ValidityCheckTestsArbitraryData {
 			
 		}
 	}
+	
+	
 }

@@ -182,7 +182,7 @@ public class PersonalNumberValidator {
 	
 	
 	/* Takes a birth date and adds a century to it if not present, based on what delimiter it would use in an ID number.
-	 * Assumes that the birth date is in the format (YY)?YYMMDD.
+	 * Assumes that the birth date is in the format YYMMDD.
 	 *  
 	 * It is assumed the year implies the latest possible century. If delimiter is +, the year is 
 	 * assumed to have occurred at least a century ago.

@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class ValidityCheck {
 	// Currently unchangeable. Can be adjusted in the future with a set-method or adding constructor
-	private final String outputLogDirectory = "src/outputLogs/";
+	private final String outputLogDirectory = "./bin/outputLogs/";
 	private String outputLogPath = outputLogDirectory + "invalidLog_";
 	
 	// The file where the output log will be written to
@@ -46,7 +46,6 @@ public class ValidityCheck {
 		this.input = new Scanner(this.inputFile);
 		
 		initializeLogDirAndFile();
-		
 	}
 	
 	/*
@@ -71,7 +70,7 @@ public class ValidityCheck {
 			this.outputLogPath = this.outputLogPath + inputFile.getName();
 		}
 		else {
-			this.outputLogPath = this.outputLogPath + "STDIN";
+			this.outputLogPath = this.outputLogPath + "STDIN.txt";
 		}
 	}
 	
@@ -90,10 +89,12 @@ public class ValidityCheck {
 				continue;
 			}
 			else if(!isValidIdNumber(idNumber)) {
+				System.out.println("INVALID ID: " + idNumber);
 				writeToLog(idNumber);
 			}
 		}
 		this.logWriter.flush();
+		System.out.println("Output log created in " + outputLogPath);
 		
 		return outputLogPath;
 	}

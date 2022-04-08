@@ -1,12 +1,11 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import validators.CoordinationNumberValidator;
 
-public class CoordinationNumberValidatorTests {
+public class TestCoordinationNumberValidator {
 
 	@Test
     public void testFormatWithValidCoordinationNumber() {

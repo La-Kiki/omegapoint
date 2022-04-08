@@ -1,13 +1,13 @@
 package tests;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 import validators.PersonalNumberValidator;
 
-public class PersonalNumberValidatorTests {
+public class TestPersonalNumberValidator {
 
 	File testData = null; 
 	
@@ -99,7 +99,7 @@ public class PersonalNumberValidatorTests {
 		boolean validShortDate = PersonalNumberValidator.isValidBirthDate("2201311234");
 		boolean validLongDate = PersonalNumberValidator.isValidBirthDate("192201311234");
 		
-		assertTrue("Personal number with valid date but without delimiter considered an invalid date", validShortDate);
+		assertTrue(validShortDate, "Personal number with valid date but without delimiter considered an invalid date");
 		assertTrue(validLongDate);
     }
 	
