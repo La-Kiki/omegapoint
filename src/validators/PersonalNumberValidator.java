@@ -121,8 +121,9 @@ public class PersonalNumberValidator {
 		
 		try {
 			LocalDate idDate = LocalDate.parse(birthDate, dateFormat);
+			LocalDate oldestAllowedCentury = LocalDate.parse("18000101", dateFormat);
 			
-			if(idDate.equals(currentDate) || idDate.isBefore(currentDate)) {
+			if(idDate.equals(currentDate) || (idDate.isBefore(currentDate) && !idDate.isBefore(oldestAllowedCentury))) {
 				return true;
 			}
 		} 
@@ -159,29 +160,6 @@ public class PersonalNumberValidator {
 		
 		return birthDate;
 	}
-	
-	/* Retrieves the delimiter from an personal, coordination or organisation number if present. Otherwise returns an empty string.
-	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
-	 * 
-	 * @param idNumber  - The ID number to retrieve the delimiter from
-	 * 
-	 * @return The delimiter if present. Otherwise an empty string
-	 */
-	public static String getDelimiter(String idNumber) {
-		return separateDateDelimiterControl(idNumber)[1];
-	}
-	
-	/* Retrieves the control numbers from a personal, coordination or organisation number.
-	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
-	 * @param idNumber  - The ID number to retrieve the control numbers from
-	 * 
-	 * @return A control number in the format XXXX
-	 */
-	public static String getControlNumbers(String idNumber) {
-		return separateDateDelimiterControl(idNumber)[2];
-	}
-	
-	
 	
 	/* Takes a birth date and adds a century to it if not present, based on what delimiter it would use in an ID number.
 	 * Assumes that the birth date is in the format YYMMDD.
@@ -220,15 +198,43 @@ public class PersonalNumberValidator {
 	}
 	
 	
+	/* Retrieves the delimiter from an personal, coordination or organisation number if present. Otherwise returns an empty string.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * 
+	 * @param idNumber  - The ID number to retrieve the delimiter from
+	 * 
+	 * @return The delimiter if present. Otherwise an empty string
+	 */
+	public static String getDelimiter(String idNumber) {
+		
+		return separateDateDelimiterControl(idNumber)[1];
+	}
+	
+	/* Retrieves the control numbers from a personal, coordination or organisation number.
+	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX. 
+	 * @param idNumber  - The ID number to retrieve the control numbers from
+	 * 
+	 * @return A control number in the format XXXX
+	 */
+	public static String getControlNumbers(String idNumber) {
+		return separateDateDelimiterControl(idNumber)[2];
+	}
+	
+	
+	
 	/* Retrieves the birth date, delimiter, and control numbers from a personal, coordination or organisation number.
-	 * Assumes the ID number is in the format (YY)?YYMMDD[-+]?XXXX.
+	 * ID number must be in the format (YY)?YYMMDD[-+]?XXXX.
 	 * 
 	 * @param idNumber  - The ID number to retrieve birth date, delimiter, and control numbers from
 	 * 
 	 * @return An array containing the birth date with or without the century, eventual delimiter, and control numbers
-	 * 		   of a given ID number.
+	 * 		   of a given ID number, IFF the ID format is valid. Otherwise it returns an array with zeros.
 	 */
 	protected static String[] separateDateDelimiterControl(String idNumber) {
+		if(!isValidFormat(idNumber)) {
+			return new String[]{"0", "0", "0"};
+		}
+		
 		int idLength = idNumber.length();
 		String birthDate = "";
 		String delimiter = "";

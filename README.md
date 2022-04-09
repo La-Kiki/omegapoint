@@ -3,18 +3,19 @@ Set up to solve a code test involving Swedish ID numbers.
 
 This program is created to check Swedish personal, coordination, and organisation numbers and whether they comply to correct formats, values, and Luhn's Algorithm.
 
-Accepted personal numbers are of the form (YY)YYMMDD(-|+)XXXX. 
+Accepted personal numbers are of the form (YY)YYMMDD(-|+|)XXXX, where (YY) must be either 18, 19, or 20.
 
-Accepted coordination numbers are of the form (YY)YYMMDD(-|+)XXXX, where DD corresponds to an existing calendar day, plus 60.
+Accepted coordination numbers are of the form (YY)YYMMDD(-|+|)XXXX, where DD corresponds to an existing calendar day, plus 60. (YY) must be either 18, 19, or 20.
 
-AAccepted organisation numbers are of the form ()YYMMDD(-|+)XXXX
+Accepted organisation numbers are of the form (16)YYMMDD(-|)XXXX, where MM must be >= 20.
 
+All three types of ID numbers must be divisible by 10 after applying Luhn's algorithm to them.
 
 ## Prerequisites
 
 To build this project, it is necessary to use [Java 11](https://docs.oracle.com/en/java/javase/11/), [JUnit4](https://junit.org/junit4/) version 4.13.2, and recommended to use [Apache ANT](https://ant.apache.org/), version 1.10.7 or higher.
 
-The following steps require a terminal.
+JUnit is included as part of the project library. Installing Java and ANT in the steps below will require a terminal.
 
 If using a Linux-based system or similar, such as [WSL], update and upgrade your available packages.
 
@@ -33,17 +34,11 @@ Verify the installation with
 ant -version
 ```
 
-Do the same for JUnit 4 and Java:
+Do the same for Java:
 
 ```bash
-sudo apt-get install junit
 sudo apt-get install openjdk-11-jre
 sudo apt-get install openjdk-11-jdk
-```
-
-Set an environment variable pointing to the JUnit jar file:
-```bash
-export JUNIT=/your/junit/path/
 ```
 
 For other operative systems, please refer to the linked program documentations.
@@ -56,7 +51,10 @@ Position yourself at the root of the project, and call
 ```bash
 ant
 ```
-to compile the project.
+to compile the project, or
+```bash
+ant build
+```
 
 To run all tests:
 ```bash

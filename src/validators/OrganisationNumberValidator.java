@@ -33,6 +33,7 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	public static boolean isValidFormat(String orgNumber) {
 		if(PersonalNumberValidator.isValidFormat(orgNumber)) {
 			String delimiter = PersonalNumberValidator.getDelimiter(orgNumber);
+			
 			if(delimiter.equals("-") || delimiter.equals("")){
 				return true;
 			}
@@ -40,7 +41,8 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 		return false;
 	}
 	
-	/* Checks whether an organisation number contains only valid number values.
+	/* Checks whether an organisation number contains only valid number values. This means that the "month" must be a value >= 20, 
+	 * and the "century" must be 16, if included.
 	 * Organisation number must be in the format (16)?YYMMDD[-+]?XXXX
 	 * 
 	 * @param orgNumber  - The organisation whose value will be checked
@@ -52,19 +54,19 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 			return false;
 		}
 		
-		String birthDate = separateDateDelimiterControl(orgNumber)[0];
-		String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
-		int middleNumbers = Integer.parseInt(middleNums);
+		String birthDate = separateDateDelimiterControl(orgNumber)[0];  // Design breakdown. Reconsider
+		String month = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
+		int monthNumbers = Integer.parseInt(month);
 		
-		if(middleNumbers >= MIN_ORG_VALUE && isValidYearPrepend(birthDate)) {
+		if(monthNumbers >= MIN_ORG_VALUE && isValidYearPrepend(birthDate)) {
 			return true;
 		}
 		
 		return false;
 	}
 	
-	/* Checks whether an organisation number contains a valid "year" or not. If using YYYY it must begin with 16,
-	 * if using YY it is always considered valid.
+	/* Checks whether an organisation number contains a valid "year" or not. If using YYYY it must begin with 16 to be valid,
+	 * if using YY it is always valid.
 	 * Organisation number must be in the format (16)?YYMMDD[-+]?XXXX
 	 * 
 	 * @param orgNumber  - The organisation whose value will be checked
