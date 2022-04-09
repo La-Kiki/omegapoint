@@ -12,8 +12,6 @@ import java.util.Scanner;
 public class ValidityCheck {
 	// Currently hardcoded. Can be adjusted in the future with a set-method or adding constructor
 	private final String outputLogDirectory = "./data/outputLogs/";
-	private final String inputFileDirectory = "./data/inputFiles/";
-	
 	private String outputLogPath = outputLogDirectory + "invalidLog_";
 	
 	// The file where the output log will be written to
@@ -45,7 +43,7 @@ public class ValidityCheck {
 	 * @return A new PersonalNumberValidator object
 	 */
 	public ValidityCheck(String filePath) throws FileNotFoundException, IOException{
-		this.inputFile = new File(this.inputFileDirectory + filePath).getAbsoluteFile();
+		this.inputFile = new File(filePath).getAbsoluteFile();
 		this.input = new Scanner(this.inputFile);
 		
 		initializeLogDirAndFile();

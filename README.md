@@ -38,15 +38,17 @@ Set an environment variable pointing to the JUnit jar file:
 export JUNIT=/your/junit/path/
 ```
 
+For other operative systems, please refer to the linked program documentations.
 
 
 ## Run tests
 
 Position yourself at the root of the project, and call
+
 ```bash
 ant
 ```
-to compile the project
+to compile the project.
 
 To run all tests:
 ```bash
@@ -56,19 +58,21 @@ ant TestAll
 
 ## Run program
 
-Place yourself at the root directory. Place any test files within the data/inputFiles directory. You can then run the program by specifying the file name as an argument.
+Place yourself at the root directory. Place any test files within the data/inputFiles directory. You can then run the program by specifying the relative file location as an argument.
 
 With Windows or Linux:
 
 ```bash
-java -cp ./build main.Main my-data.txt
+java -cp ./build main.Main ./data/inputFiles/my-data.txt
 ```
 
 
 If using STDIN, pipe your data into the program according to OS-specific commands.
 
-With Windows Powershell:
+With Windows or Linux:
 
 ```bash
 echo "199990130" | java -cp ./build main.Main
 ```
+
+A log containing the resulting invalid personal, organisation, or coordination numbers will then be created inside a new data/outputLogs directory.
