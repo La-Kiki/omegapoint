@@ -29,8 +29,8 @@
     </target>
 	
 	
-	<target name="run" depends="compile">
-	       <java classname="HelloWorld" fork="true"></java>
+	<target name="run" depends="init">
+	       <java classname="Main" fork="true"></java>
 	</target>
 	
     <target name="clean">

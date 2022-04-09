@@ -8,7 +8,7 @@ import validators.ValidityCheck;
 import java.io.*;
 
 public class TestValidityCheck {
-	String invalidFilePath = "/not/a/real/file.txt";
+	String invalidFilePath = "/should/not/be/a/real/file.txt";
 	String validFilePath = new File("./src/tests/testData/validPersonalNumbers.txt").toString();
 	
 	File testFilesDirectory = new File("./src/tests/testData/"); 

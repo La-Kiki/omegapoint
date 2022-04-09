@@ -10,8 +10,10 @@ import java.util.Scanner;
  * A class for evaluating whether an arbitrary number of personal, coordination, or organisation numbers are valid or not.
  */
 public class ValidityCheck {
-	// Currently unchangeable. Can be adjusted in the future with a set-method or adding constructor
-	private final String outputLogDirectory = "./bin/outputLogs/";
+	// Currently hardcoded. Can be adjusted in the future with a set-method or adding constructor
+	private final String outputLogDirectory = "./data/outputLogs/";
+	private final String inputFileDirectory = "./data/inputFiles/";
+	
 	private String outputLogPath = outputLogDirectory + "invalidLog_";
 	
 	// The file where the output log will be written to
@@ -22,6 +24,7 @@ public class ValidityCheck {
 	private InputStream inputSource = null;
 	
 	private Scanner input = null;
+	
 	
 	/*Creates a new PersonalNumberValidator that will scan STDIN for any invalid Swedish
 	 * ID numbers and log them in a predetermined directory
@@ -42,7 +45,7 @@ public class ValidityCheck {
 	 * @return A new PersonalNumberValidator object
 	 */
 	public ValidityCheck(String filePath) throws FileNotFoundException, IOException{
-		this.inputFile = new File(filePath);
+		this.inputFile = new File(this.inputFileDirectory + filePath).getAbsoluteFile();
 		this.input = new Scanner(this.inputFile);
 		
 		initializeLogDirAndFile();
