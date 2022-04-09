@@ -107,7 +107,6 @@ public class ValidityCheck {
 	 * 		   Returns false if none of these.
 	 */
 	public static boolean isValidIdNumber(String idNumber) {
-		
 		if(PersonalNumberValidator.isValidPersonalNumber(idNumber)) {
 			return true;
 		}

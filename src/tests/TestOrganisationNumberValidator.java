@@ -1,7 +1,7 @@
 package tests;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 import validators.OrganisationNumberValidator;
 
@@ -15,14 +15,14 @@ public class TestOrganisationNumberValidator {
 	}
 	
 	@Test
-    public void testValueWithValidOrganisationNumber() {
+    public void testValueWithValidOrganisationValue() {
 		boolean isValidFormat = OrganisationNumberValidator.isValidOrganisationValue("16556601-6399");
 		
 		assertTrue(isValidFormat);
 	}
 	
 	@Test
-    public void testValueWithInvalidOrganisationNumber() {
+    public void testValueWithInvalidOrganisationValue() {
 		boolean isInvalidFormat = OrganisationNumberValidator.isValidOrganisationValue("12556601-6399");
 		
 		assertFalse(isInvalidFormat);

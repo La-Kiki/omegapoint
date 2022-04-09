@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse.ant.import?>
+
+<project basedir="." default="build" name="omegapoint">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="11"/>
+    <property name="source" value="11"/>
+	
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="../../../../.p2/pool/plugins/org.junit_4.13.2.v20211018-1956.jar"/>
+        <pathelement location="../../../../.p2/pool/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar"/>
+    </path>
+    	
+    <path id="omegapoint.classpath">
+        <pathelement location="build"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="build"/>
+        <copy includeemptydirs="false" todir="build">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+	
+	
+	<target name="run" depends="compile">
+	       <java classname="HelloWorld" fork="true"></java>
+	</target>
+	
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+	
+    <target depends="clean" name="cleanall">
+    	<delete dir="junit"/>
+    </target>
+	
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+	
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="omegapoint.classpath"/>
+        </javac>
+    </target>
+	
+    
+	
+    <target name="omegapoint">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="tests.TestAll" todir="${junit.output.dir}"/>
+            <test name="tests.TestCoordinationNumberValidator" todir="${junit.output.dir}"/>
+            <test name="tests.TestOrganisationNumberValidator" todir="${junit.output.dir}"/>
+            <test name="tests.TestPersonalNumberValidator" todir="${junit.output.dir}"/>
+            <test name="tests.TestValidityCheck" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="run.omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestCoordinationNumberValidator">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestCoordinationNumberValidator" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestOrganisationNumberValidator">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestOrganisationNumberValidator" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestPersonalNumberValidator">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestPersonalNumberValidator" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestRunner">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestRunner" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestValidityCheck">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestValidityCheck" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+    <target name="TestAll">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+        	<formatter type="plain" usefile="false"/>
+            <formatter type="xml"/>
+            <test name="tests.TestAll" todir="${junit.output.dir}"/>
+            <jvmarg line="-ea"/>
+            <classpath refid="omegapoint.classpath"/>
+        </junit>
+    </target>
+	
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
