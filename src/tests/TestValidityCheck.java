@@ -1,6 +1,7 @@
 package tests;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
 import org.junit.*;
 
 import validators.ValidityCheck;
