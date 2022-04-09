@@ -4,7 +4,7 @@ Set up to solve a code test involving Swedish personal numbers.
 
 ## Prerequisites
 
-To build this project, it is necessary to use [Java](), [JUnit4](https://junit.org/junit4/) version 4.13.2, and recommended to use [Apache ANT](https://ant.apache.org/), version 1.10.7 or higher.
+To build this project, it is necessary to use [Java 11](https://docs.oracle.com/en/java/javase/11/), [JUnit4](https://junit.org/junit4/) version 4.13.2, and recommended to use [Apache ANT](https://ant.apache.org/), version 1.10.7 or higher.
 
 The following steps require a terminal.
 
@@ -28,9 +28,9 @@ ant -version
 Do the same for JUnit 4 and Java:
 
 ```bash
-sudo apt-get install openjdk-11-jdk
-sudo apt-get install openjdk-11-jdk
 sudo apt-get install junit
+sudo apt-get install openjdk-11-jre
+sudo apt-get install openjdk-11-jdk
 ```
 
 Set an environment variable pointing to the JUnit jar file:
