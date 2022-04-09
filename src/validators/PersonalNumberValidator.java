@@ -59,7 +59,7 @@ public class PersonalNumberValidator {
 		String longDateNoDivider = "(18|19|20|16)" + shortDateNoDivider;
 		
 		// idNumber may have a + or - as divider between birth date and control numbers. 4 specific centuries allowed
-		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX. Only millenia 1 or 2
+		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX.
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
 		String longDateWithDivider = "(18|19|20|16)" + shortDateWithDivider;
 		
@@ -90,7 +90,7 @@ public class PersonalNumberValidator {
 		LocalDate idDate = LocalDate.parse(getBirthDate(idNumber, ADD_CENTURY), dateFormat);
 		LocalDate centuryAgo = LocalDate.now().minusYears(100);
 		
-		if(idDate.equals(centuryAgo) ||  idDate.isBefore(centuryAgo)){
+		if(idDate.equals(centuryAgo) || idDate.isBefore(centuryAgo)){
 			return true;
 		}
 		
@@ -152,7 +152,7 @@ public class PersonalNumberValidator {
 			birthDate = addCenturyToDate(birthDate, delimiter);
 		}
 		else if(birthDate.length() == LONG_BIRTH_DATE && !addCentury) {
-			birthDate = birthDate.substring(2); //Cuts off the century of a year
+			birthDate = birthDate.substring(2);
 		}
 		
 		return birthDate;
@@ -238,10 +238,9 @@ public class PersonalNumberValidator {
 		if(idLength == LONG_DATE_NO_DIVIDER || idLength == SHORT_DATE_NO_DIVIDER) {
 			birthDate = idNumber.substring(0, idLength -4);
 			controlNums = idNumber.substring(idLength -4, idLength);
-			// Cuts off 4 control numbers with offset -4
 		}
 		else if(idLength == LONG_DATE_WITH_DIVIDER || idLength == SHORT_DATE_WITH_DIVIDER) {
-			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))"); //Splits and then keeps delimiter
+			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))"); //Splits and keeps delimiter
 			birthDate = idSegments[0];
 			delimiter = idSegments[1];
 			controlNums = idSegments[2];
@@ -274,7 +273,7 @@ public class PersonalNumberValidator {
 				value = value*2; 
 			}
 			
-			multipliedSum += (value/10) + (value % 10); //Integer division
+			multipliedSum += (value/10) + (value % 10);
 		}
 		
 		if(multipliedSum % 10 == 0) {
