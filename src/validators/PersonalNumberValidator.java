@@ -54,14 +54,14 @@ public class PersonalNumberValidator {
 	 * @return A boolean stating whether the given ID number follows a valid format
 	 */
 	public static boolean isValidFormat(String idNumber) {
-		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX
+		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX. 4 specific centuries allowed
 		String shortDateNoDivider = "[0-9]{10}";
-		String longDateNoDivider = "[1-2][0-9]" + shortDateNoDivider;
+		String longDateNoDivider = "(18|19|20|16)" + shortDateNoDivider;
 		
-		// idNumber may have a + or - as divider between birth date and control numbers. 
+		// idNumber may have a + or - as divider between birth date and control numbers. 4 specific centuries allowed
 		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX. Only millenia 1 or 2
 		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		String longDateWithDivider = "[1-2][0-9]" + shortDateWithDivider;
+		String longDateWithDivider = "(18|19|20|16)" + shortDateWithDivider;
 		
 		
 		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {

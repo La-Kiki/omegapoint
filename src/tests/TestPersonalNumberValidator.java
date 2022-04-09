@@ -40,6 +40,13 @@ public class TestPersonalNumberValidator {
 		assertFalse(invalidPlusWithYear);
     }
 	
+	@Test
+    public void testFormatWithInvalidCentury() {
+		boolean invalidCentury = PersonalNumberValidator.isValidFormat("17220406+1234");
+		
+		assertFalse(invalidCentury);
+    }
+	
 	
 	@Test
     public void testFormatWithValidLengths() {
@@ -106,9 +113,9 @@ public class TestPersonalNumberValidator {
 	
 	@Test
     public void testDateWithInvalidBirthDate() {
-		boolean validDate = PersonalNumberValidator.isValidBirthDate("20230331-1234");
+		boolean invalidDate = PersonalNumberValidator.isValidBirthDate("20230331-1234");
 		
-		assertFalse(validDate);
+		assertFalse(invalidDate);
     }
 	
 	@Test
