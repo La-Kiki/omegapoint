@@ -90,7 +90,6 @@ public class ValidityCheck {
 				continue;
 			}
 			else if(!isValidIdNumber(idNumber)) {
-				System.out.println("INVALID ID: " + idNumber);
 				writeToLog(idNumber);
 			}
 		}

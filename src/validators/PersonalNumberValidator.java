@@ -14,8 +14,9 @@ public class PersonalNumberValidator {
 													.withResolverStyle(ResolverStyle.STRICT);
 
 	private static final int CURRENT_DECADE = LocalDate.now().getYear() % 100;
-	private static final boolean ADD_CENTURY = true;
-	private static final boolean DONT_ADD_CENTURY = false;
+	
+	protected static final boolean ADD_CENTURY = true;
+	protected static final boolean DONT_ADD_CENTURY = false;
 	
 	//Constants for the different string lengths of valid personal, coordinate, and organisation numbers.
 	// Birth dates without or with century: YYMMDD or YYYYMMDD
@@ -23,12 +24,12 @@ public class PersonalNumberValidator {
 	protected static final int LONG_BIRTH_DATE = 8;
 	
 	//Without delimiters + or -. YYMMDDXXXX or YYYYMMDDXXXX
-	protected static final int SHORT_DATE_NO_DIVIDER = 10;
-	protected static final int LONG_DATE_NO_DIVIDER = 12;
+	protected static final int SHORT_DATE_NO_DELIMITER = 10;
+	protected static final int LONG_DATE_NO_DELIMITER = 12;
 			
 	//With delimiters + or -. YYMMDD-XXXX or YYYYMMDD-XXXX
-	protected static final int SHORT_DATE_WITH_DIVIDER = 11;
-	protected static final int LONG_DATE_WITH_DIVIDER = 13;
+	protected static final int SHORT_DATE_WITH_DELIMITER = 11;
+	protected static final int LONG_DATE_WITH_DELIMITER = 13;
 	
 	
 	/* Checks if a given personal number conforms to a correct format, date, and to Luhn's algorithm.
@@ -55,23 +56,23 @@ public class PersonalNumberValidator {
 	 */
 	public static boolean isValidFormat(String idNumber) {
 		// idNumber consists only of numbers. YYMMDDXXXX or YYYYMMDDXXXX. 4 specific centuries allowed
-		String shortDateNoDivider = "[0-9]{10}";
-		String longDateNoDivider = "(18|19|20|16)" + shortDateNoDivider;
+		String shortDateNoDelimiter = "[0-9]{10}";
+		String longDateNoDelimiter = "(16|18|19|20)" + shortDateNoDelimiter;
 		
-		// idNumber may have a + or - as divider between birth date and control numbers. 4 specific centuries allowed
+		// idNumber may have a + or - as DELIMITER between birth date and control numbers. 4 specific centuries allowed
 		// YYMMDD[-+]XXXX or YYYYMMDD[-+]XXXX.
-		String shortDateWithDivider = "[0-9]{6}(-|\\+)[0-9]{4}";
-		String longDateWithDivider = "(18|19|20|16)" + shortDateWithDivider;
+		String shortDateWithDelimiter = "[0-9]{6}(-|\\+)[0-9]{4}";
+		String longDateWithDelimiter = "(16|18|19|20)" + shortDateWithDelimiter;
 		
 		
-		if(Pattern.matches(shortDateNoDivider + "|"+ longDateNoDivider, idNumber)) {
+		if(Pattern.matches(shortDateNoDelimiter + "|"+ longDateNoDelimiter, idNumber)) {
 			return true;
 		}
-		else if(Pattern.matches(shortDateWithDivider, idNumber)) {
+		else if(Pattern.matches(shortDateWithDelimiter, idNumber)) {
 			return true;
 		}
-		else if(Pattern.matches(longDateWithDivider, idNumber)) {
-			if(idNumber.contains("-") || (idNumber.contains("+") && isPlusDividerValid(idNumber))) {
+		else if(Pattern.matches(longDateWithDelimiter, idNumber)) {
+			if(idNumber.contains("-") || (idNumber.contains("+") && isPlusDelimiterValid(idNumber))) {
 				return true;
 			}
 		}
@@ -86,7 +87,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return A boolean stating whether the ID number can use a plus delimiter
 	 */
-	private static boolean isPlusDividerValid(String idNumber) {
+	private static boolean isPlusDelimiterValid(String idNumber) {
 		LocalDate idDate = LocalDate.parse(getBirthDate(idNumber, ADD_CENTURY), dateFormat);
 		LocalDate centuryAgo = LocalDate.now().minusYears(100);
 		
@@ -120,6 +121,7 @@ public class PersonalNumberValidator {
 		
 		try {
 			LocalDate idDate = LocalDate.parse(birthDate, dateFormat);
+			
 			if(idDate.equals(currentDate) || idDate.isBefore(currentDate)) {
 				return true;
 			}
@@ -235,11 +237,11 @@ public class PersonalNumberValidator {
 		/* Both conditionals separate the 4 control numbers. Second one separates the delimiter too
 		 * Leaves 6 and 8 birth numbers respectively.
 		 */
-		if(idLength == LONG_DATE_NO_DIVIDER || idLength == SHORT_DATE_NO_DIVIDER) {
+		if(idLength == LONG_DATE_NO_DELIMITER || idLength == SHORT_DATE_NO_DELIMITER) {
 			birthDate = idNumber.substring(0, idLength -4);
 			controlNums = idNumber.substring(idLength -4, idLength);
 		}
-		else if(idLength == LONG_DATE_WITH_DIVIDER || idLength == SHORT_DATE_WITH_DIVIDER) {
+		else if(idLength == LONG_DATE_WITH_DELIMITER || idLength == SHORT_DATE_WITH_DELIMITER) {
 			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))"); //Splits and keeps delimiter
 			birthDate = idSegments[0];
 			delimiter = idSegments[1];
@@ -269,9 +271,7 @@ public class PersonalNumberValidator {
 		for(int i = 0; i < noDelimiterID.length(); ++i) {
 			int value = Integer.parseInt(String.valueOf(noDelimiterID.charAt(i)));
 			
-			if(i % 2 == 0) { 
-				value = value*2; 
-			}
+			if(i % 2 == 0) { value = value*2; }
 			
 			multipliedSum += (value/10) + (value % 10);
 		}

@@ -49,7 +49,7 @@ public class CoordinationNumberValidator extends PersonalNumberValidator{
 	 * @return A string of a coordinate number with the offset subtracted
 	 */
 	private static String subtractOffsetFromCoordinationNumber(String coordinationNumber) {
-		String birthDate = getBirthDate(coordinationNumber, true);
+		String birthDate = getBirthDate(coordinationNumber, ADD_CENTURY);
 		String controlNumbers = getControlNumbers(coordinationNumber);
 		
 		int actualBirthDay = Integer.parseInt(birthDate.substring(birthDate.length() -2)) - COORD_NUM_OFFSET;
