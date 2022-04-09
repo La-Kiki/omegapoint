@@ -147,7 +147,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return A birth date in the format YYYYYMMDD or YYYMMDD
 	 */
-	public static String getBirthDate(String idNumber, boolean addCentury) {
+	public static String getBirthDate(String idNumber, boolean addCentury) {  //Risky function - No validation done
 		String birthDate = separateDateDelimiterControl(idNumber)[0];
 		String delimiter = getDelimiter(idNumber);
 		
