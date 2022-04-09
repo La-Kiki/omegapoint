@@ -1,5 +1,13 @@
 # Omegapoint code test
-Set up to solve a code test involving Swedish personal numbers.
+Set up to solve a code test involving Swedish ID numbers.
+
+This program is created to check Swedish personal, coordination, and organisation numbers and whether they comply to correct formats, values, and Luhn's Algorithm.
+
+Accepted personal numbers are of the form (YY)YYMMDD(-|+)XXXX. 
+
+Accepted coordination numbers are of the form (YY)YYMMDD(-|+)XXXX, where DD corresponds to an existing calendar day, plus 60.
+
+AAccepted organisation numbers are of the form ()YYMMDD(-|+)XXXX
 
 
 ## Prerequisites

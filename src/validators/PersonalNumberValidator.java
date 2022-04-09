@@ -233,7 +233,7 @@ public class PersonalNumberValidator {
 		String controlNums = "";
 		
 		/* Both conditionals separate the 4 control numbers. Second one separates the delimiter too
-		 * Leave 6 or 8 birth numbers respectively.
+		 * Leaves 6 and 8 birth numbers respectively.
 		 */
 		if(idLength == LONG_DATE_NO_DIVIDER || idLength == SHORT_DATE_NO_DIVIDER) {
 			birthDate = idNumber.substring(0, idLength -4);
@@ -241,7 +241,7 @@ public class PersonalNumberValidator {
 			// Cuts off 4 control numbers with offset -4
 		}
 		else if(idLength == LONG_DATE_WITH_DIVIDER || idLength == SHORT_DATE_WITH_DIVIDER) {
-			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))");
+			String[] idSegments = idNumber.split("(?<=(-|\\+))|(?=(-|\\+))"); //Splits and then keeps delimiter
 			birthDate = idSegments[0];
 			delimiter = idSegments[1];
 			controlNums = idSegments[2];

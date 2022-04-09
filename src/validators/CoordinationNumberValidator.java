@@ -30,10 +30,12 @@ public class CoordinationNumberValidator extends PersonalNumberValidator{
 	 * @return A boolean stating whether the coordination number contains a valid birth date
 	 */
 	public static boolean isValidBirthDate(String coordinationNumber) {
-		String personalNumber = subtractOffsetFromCoordinationNumber(coordinationNumber);
-		
-		if(PersonalNumberValidator.isValidBirthDate(personalNumber)) {
-			return true;
+		if(isValidFormat(coordinationNumber)) {	
+			String personalNumber = subtractOffsetFromCoordinationNumber(coordinationNumber);
+			
+			if(PersonalNumberValidator.isValidBirthDate(personalNumber)) {
+				return true;
+			}
 		}
 		
 		return false;

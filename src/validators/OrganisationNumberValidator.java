@@ -7,6 +7,7 @@ package validators;
 public class OrganisationNumberValidator extends PersonalNumberValidator{
 
 	private static final int ORG_CENTURY = 16; 
+	private static final int MIN_ORG_VALUE = 20;
 	/*
 	 * Checks if a given organisation number conforms to a correct format, value, and to Luhn's algorithm.
 	 * Accepts organisation numbers in the format (YY)?YYMMDD[-+]?XXXX
@@ -53,9 +54,9 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 		
 		String birthDate = separateDateDelimiterControl(orgNumber)[0];
 		String middleNums = birthDate.substring(birthDate.length()-4, birthDate.length()-2);
-		int middleValue = Integer.parseInt(middleNums);
+		int middleNumbers = Integer.parseInt(middleNums);
 		
-		if(middleValue >= 20 && isValidYearPrepend(birthDate)) {
+		if(middleNumbers >= MIN_ORG_VALUE && isValidYearPrepend(birthDate)) {
 			return true;
 		}
 		
@@ -72,8 +73,8 @@ public class OrganisationNumberValidator extends PersonalNumberValidator{
 	 */
 	private static boolean isValidYearPrepend(String birthDate) {
 		if(birthDate.length() == LONG_BIRTH_DATE) {
-			
 			int century  = Integer.parseInt(birthDate.substring(0,2));
+			
 			if(century == ORG_CENTURY) {
 				return true;
 			}
