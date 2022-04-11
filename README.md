@@ -80,7 +80,7 @@ The same execution can be achieved with the following Java command:
 java -cp ./build main.Main ./data/inputFiles/[my-data].txt ./data/inputFiles/[my-data].txt
 ```
 
-If using STDIN, you can alos pipe your data into the program.
+If using STDIN, you can also pipe your data into the program.
 ```bash
 echo "199990130" | java -cp ./build main.Main
 ```
