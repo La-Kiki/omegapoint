@@ -172,7 +172,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return A birth date in the format of YYYYMMDD
 	 */
-	private static String addCenturyToDate(String birthDate, String delimiter) {
+	private static String addCenturyToDate(String birthDate, String delimiter) { 
 		int idLength = birthDate.length();
 		int decade = Integer.parseInt(birthDate.substring(0, 2));
 		
@@ -205,7 +205,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return The delimiter if present. Otherwise an empty string
 	 */
-	public static String getDelimiter(String idNumber) {
+	public static String getDelimiter(String idNumber) { 		//Risky function - No validation done
 		
 		return separateDateDelimiterControl(idNumber)[1];
 	}
@@ -216,7 +216,7 @@ public class PersonalNumberValidator {
 	 * 
 	 * @return A control number in the format XXXX
 	 */
-	public static String getControlNumbers(String idNumber) {
+	public static String getControlNumbers(String idNumber) { 	//Risky function - No validation done
 		return separateDateDelimiterControl(idNumber)[2];
 	}
 	
@@ -228,12 +228,9 @@ public class PersonalNumberValidator {
 	 * @param idNumber  - The ID number to retrieve birth date, delimiter, and control numbers from
 	 * 
 	 * @return An array containing the birth date with or without the century, eventual delimiter, and control numbers
-	 * 		   of a given ID number, IFF the ID format is valid. Otherwise it returns an array with zeros.
+	 * 		   of a given ID number, IFF the ID format is valid.
 	 */
-	protected static String[] separateDateDelimiterControl(String idNumber) {
-		if(!isValidFormat(idNumber)) {
-			return new String[]{"0", "0", "0"};
-		}
+	protected static String[] separateDateDelimiterControl(String idNumber) { //Risky function - No validation done
 		
 		int idLength = idNumber.length();
 		String birthDate = "";
