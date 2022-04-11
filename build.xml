@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse.ant.import?>
 
-<project basedir="." default="build" name="omegapoint">
+<project name="omegapoint" basedir="." default="build">
     <property environment="env"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="11"/>
     <property name="source" value="11"/>
+
+	<property name="arg.files" value="${arg.files}"/>
+	<property name="arg.files.dir" value="./data/inputFiles/"/>
+	
+
 	
     <path id="JUnit 4.libraryclasspath">
         <pathelement location="./lib/junit4-4.13.1.jar"/>
@@ -18,7 +23,8 @@
         <path refid="JUnit 4.libraryclasspath"/>
     </path>
 	
-    <target name="init">
+	
+	<target name="init">
         <mkdir dir="build"/>
         <copy includeemptydirs="false" todir="build">
             <fileset dir="src">
@@ -28,46 +34,62 @@
         </copy>
     </target>
 	
+	<target name="build" depends="build-project" />
+		<target name="build-refprojects" description="Build all projects which reference this project. Useful to propagate changes."/>
+		
+	    <target name="build-project" depends="init">
+	        <echo message="${ant.project.name}: ${ant.file}"/>
+	        <javac debug="true" debuglevel="${debuglevel}" destdir="build" includeantruntime="false" source="${source}" target="${target}">
+	            <src path="src"/>
+	            <classpath refid="omegapoint.classpath"/>
+	        </javac>
+	    </target>
+	
 	
 	<target name="run" depends="init">
-	       <java classname="Main" fork="true"></java>
+		<script language="javascript">
+				       	 <![CDATA[
+				       	   	var argDir = project.getProperty("arg.files.dir");
+				       	   	var argFiles = project.getProperty("arg.files").split(" ");
+				       	   	
+				       	   	for(var i = 0; i < argFiles.length; ++i){
+			       	 			argFiles[i] = argFiles[i].replace(argFiles[i], argDir + argFiles[i]);
+				       	   	}
+			       	 		var argFilePaths = argFiles.join().replace(',', ' ');
+				       	 	project.setProperty('arg.files', argFilePaths);
+				       	  ]]>
+			    </script>
+		
+	       <java classname="main.Main" fork="true">
+	       	   <arg line="${arg.files}"/>
+		       <classpath refid="omegapoint.classpath"/>
+	       </java>
 	</target>
+	
 	
     <target name="clean">
         <delete dir="build"/>
     </target>
-	
     <target depends="clean" name="cleanall">
     	<delete dir="junit"/>
     </target>
 	
-	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
 	
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="build" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
-            <classpath refid="omegapoint.classpath"/>
-        </javac>
-    </target>
+	<target name="tests">
+	        <mkdir dir="${junit.output.dir}"/>
+	        <junit fork="yes" printsummary="withOutAndErr">
+	            <formatter type="xml"/>
+	            <test name="tests.TestAll" todir="${junit.output.dir}"/>
+	            <test name="tests.TestCoordinationNumberValidator" todir="${junit.output.dir}"/>
+	            <test name="tests.TestOrganisationNumberValidator" todir="${junit.output.dir}"/>
+	            <test name="tests.TestPersonalNumberValidator" todir="${junit.output.dir}"/>
+	            <test name="tests.TestValidityCheck" todir="${junit.output.dir}"/>
+	            <jvmarg line="-ea"/>
+	            <classpath refid="omegapoint.classpath"/>
+	        </junit>
+	    </target>
 	
-    
 	
-    <target name="omegapoint">
-        <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="xml"/>
-            <test name="tests.TestAll" todir="${junit.output.dir}"/>
-            <test name="tests.TestCoordinationNumberValidator" todir="${junit.output.dir}"/>
-            <test name="tests.TestOrganisationNumberValidator" todir="${junit.output.dir}"/>
-            <test name="tests.TestPersonalNumberValidator" todir="${junit.output.dir}"/>
-            <test name="tests.TestValidityCheck" todir="${junit.output.dir}"/>
-            <jvmarg line="-ea"/>
-            <classpath refid="run.omegapoint.classpath"/>
-        </junit>
-    </target>
     <target name="TestCoordinationNumberValidator">
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr">
