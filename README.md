@@ -3,11 +3,11 @@ Set up to solve a code test involving Swedish ID numbers.
 
 This program is created to check Swedish personal, coordination, and organisation numbers and whether they comply to correct formats, values, and Luhn's Algorithm.
 
-Accepted personal numbers are of the form (YY)YYMMDD(-|+|)XXXX, where (YY) must be either 18, 19, or 20.
+Accepted personal numbers are of the form (YY)?YYMMDD[-+ε]XXXX, where (YY) must be either 18, 19, or 20, and using + as a delimiter means the birth date occurred over a 100 years ago.
 
-Accepted coordination numbers are of the form (YY)YYMMDD(-|+|)XXXX, where DD corresponds to an existing calendar day, plus 60. (YY) must be either 18, 19, or 20.
+Accepted coordination numbers are of the form (YY)?YYMMDD[-+ε]XXXX, where DD corresponds to an existing calendar day, plus 60. Follows the same rules as personal numbers too.
 
-Accepted organisation numbers are of the form (16)YYMMDD(-|)XXXX, where MM must be >= 20.
+Accepted organisation numbers are of the form (16)?YYMMDD[-ε]XXXX, where MM must be >= 20.
 
 All three types of ID numbers must be divisible by 10 after applying Luhn's algorithm to them.
 
@@ -46,21 +46,23 @@ For other operative systems, please refer to the linked program documentations.
 
 ## Run tests
 
-Position yourself at the root of the project, and call
+Position yourself at the root of the project, and call either 
 
 ```bash
 ant
-```
-to compile the project, or
-```bash
 ant build
 ```
+to compile the project.
 
 To run all tests:
 ```bash
 ant TestAll
 ```
 
+Individual class tests can be run with
+```bash
+ant Test[className]
+```
 
 ## Run program
 
