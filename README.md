@@ -66,12 +66,14 @@ ant Test[className]
 
 ## Run program
 
+If you want to run the program with your own data, create a text file with line-separated ID numbers that you want to process.
+
 Place yourself at the root directory. Place any test files within the data/inputFiles directory. You can then run the program by specifying the relative file location as an argument.
 
 With Windows or Linux:
 
 ```bash
-java -cp ./build main.Main ./data/inputFiles/my-data.txt
+java -cp ./build main.Main ./data/inputFiles/[my-data].txt
 ```
 
 
