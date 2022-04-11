@@ -47,19 +47,6 @@
 	
 	
 	<target name="run" depends="init">
-		<script language="javascript">
-				       	 <![CDATA[
-				       	   	var argDir = project.getProperty("arg.files.dir");
-				       	   	var argFiles = project.getProperty("arg.files").split(" ");
-				       	   	
-				       	   	for(var i = 0; i < argFiles.length; ++i){
-			       	 			argFiles[i] = argFiles[i].replace(argFiles[i], argDir + argFiles[i]);
-				       	   	}
-			       	 		var argFilePaths = argFiles.join().replace(',', ' ');
-				       	 	project.setProperty('arg.files', argFilePaths);
-				       	  ]]>
-			    </script>
-		
 	       <java classname="main.Main" fork="true">
 	       	   <arg line="${arg.files}"/>
 		       <classpath refid="omegapoint.classpath"/>

@@ -68,19 +68,19 @@ ant Test[className]
 
 If you want to run the program with your own data, create a text file with line-separated ID numbers that you want to process.
 
-Place yourself at the root directory. Place any test files within the data/inputFiles directory. You can then run the program by specifying the relative file location as an argument.
+Place yourself at the root directory. Place any test files within the data/inputFiles directory. You can then run the program by specifying the relative file locations of your input files in the Darg.files argument below.
 
-With Windows or Linux:
 
 ```bash
-java -cp ./build main.Main ./data/inputFiles/[my-data].txt
+ant run -Darg.files='./data/inputFiles/exampleFile.txt ./data/inputFiles/exampleFile.txt'
 ```
 
+The same execution can be achieved with the following Java command:
+```bash
+java -cp ./build main.Main ./data/inputFiles/[my-data].txt ./data/inputFiles/[my-data].txt
+```
 
-If using STDIN, pipe your data into the program according to OS-specific commands.
-
-With Windows or Linux:
-
+If using STDIN, you can alos pipe your data into the program.
 ```bash
 echo "199990130" | java -cp ./build main.Main
 ```
